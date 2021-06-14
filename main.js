@@ -6,11 +6,13 @@ const newBrowser = require('./newBrowser').run,
 	amazonLogin = require('./amazonLogin').run;
 
 
-let browser = newBrowser();
+let browser;
 
 async function initiate(startPage, pagesAtTime) {
 	console.log(`Running initiate script: startPage=${startPage}, pagesAtTime=${pagesAtTime}`);
-	await browser;
+
+	if (!browser)
+		browser = await newBrowser();
 
 	await amazonLogin().then((p) => p.close());
 	await facebookLogin().then((p) => p.close());
