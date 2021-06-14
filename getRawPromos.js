@@ -1,4 +1,6 @@
 const amazonLogin = require('./amazonLogin').run;
+const wait = require('./wait').run;
+const ms = require('ms');
 
 const START_DATE = /(?<=Start Date:\n<\/span> )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} at [0-9]{2}:[0-9]{2} [A-Za-z]{2} PDT/;
 
@@ -9,6 +11,8 @@ module.exports.run = async function (browser, startPage, pagesAtTime) {
 
 	for (let i = startPage; i < startPage + pagesAtTime; i++) {
 		await azPage.goto(`https://affiliate-program.amazon.com/home/promohub/promocodes/mpc?ac-ms-src=nav&type=mpc&active_date_range=0&serial=&is_featured_promotions=0&store_id=amazeballdeal-20&page=${i}`);
+		await wait(ms('1m'));
+
 		let innerText = await azPage.evaluate(() => {
 			/* eslint-disable-next-line no-undef */
 			return JSON.parse(document.querySelector('body').innerText);
