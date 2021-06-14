@@ -15,7 +15,7 @@ async function initiate(startPage, pagesAtTime) {
 		browser = await newBrowser();
 
 	await amazonLogin(browser).then((p) => p.close());
-	await facebookLogin(browser).then((p) => p.close());
+	await facebookLogin(browser, true).then((p) => p.close());
 
 	let rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
 
