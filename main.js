@@ -12,8 +12,8 @@ async function initiate(startPage, pagesAtTime) {
 	console.log(`Running initiate script: startPage=${startPage}, pagesAtTime=${pagesAtTime}`);
 	await browser;
 
-	await amazonLogin().then((p) => p.close());
-	await facebookLogin().then((p) => p.close());
+	await amazonLogin(browser).then((p) => p.close());
+	await facebookLogin(browser).then((p) => p.close());
 
 	let rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
 
