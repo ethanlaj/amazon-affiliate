@@ -1,3 +1,6 @@
+const wait = require('./wait').run;
+const ms = require('ms');
+
 module.exports.run = async function (browser) {
 	const page = await browser.newPage();
 	await page.goto('https://www.facebook.com/login');
@@ -13,6 +16,8 @@ module.exports.run = async function (browser) {
 	} catch {
 		console.log('Most likely already logged into Facebook, skipping logging in again.');
 	}
+
+	await wait(ms('1m'));
 
 	await page.goto('https://www.facebook.com/groups/amazeballdeals');
 
