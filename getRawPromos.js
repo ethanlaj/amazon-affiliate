@@ -17,7 +17,6 @@ module.exports.run = async function (browser, startPage, pagesAtTime) {
 			/* eslint-disable-next-line no-undef */
 			return JSON.parse(document.querySelector('body').innerText);
 		});
-		console.log('works');
 
 		innerText = innerText.search_result.split('</div></div></div>');
 		for (let i = innerText.length - 1; i >= 0; i--) {
