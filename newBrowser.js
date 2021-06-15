@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer-core');
 
 module.exports.run = async function () {
 	let options = {
-		headless: true,
+		headless: false,
 	};
 	if (process.env.ENVIRONMENT === 'local')
 		options.executablePath = './node_modules/puppeteer/.local-chromium/mac-884014/chrome-mac/Chromium.app/Contents/MacOS/Chromium';
