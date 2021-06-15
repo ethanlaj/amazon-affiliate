@@ -9,8 +9,6 @@ module.exports.run = async function (browser) {
 			page.waitForNavigation(),
 			page.click('#loginbutton')
 		]);
-
-		console.log('Logging into Facebook...');
 	} catch {
 		console.log('Most likely already logged into Facebook, skipping logging in again.');
 	}
