@@ -10,8 +10,6 @@ module.exports.run = async function (browser) {
 			page.waitForNavigation(),
 			page.click('#signInSubmit')
 		]);
-
-		console.log('Logging into Amazon...');
 	} catch {
 		console.log('Most likely already logged into Amazon, skipping logging in again.');
 	}
