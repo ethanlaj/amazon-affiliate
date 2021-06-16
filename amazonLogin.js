@@ -3,7 +3,7 @@ module.exports.run = async function (browser) {
 	await page.goto('https://affiliate-program.amazon.com/home/promohub/promocodes');
 
 	try {
-		await page.type('#ap_email', process.env.EMAIL);
+		await page.type('#ap_email', process.env.EMAIL).catch(() => {});
 		await page.type('#ap_password', process.env.AMAZON_PW);
 
 		await Promise.all([
