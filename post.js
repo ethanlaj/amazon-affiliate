@@ -1,6 +1,7 @@
 const facebookLogin = require('./facebookLogin').run,
 	wait = require('./wait').run,
-	checkTimes = require('./checkTimes').run;
+	checkTimes = require('./checkTimes').run,
+	pageListen = require('./pageListen').run;
 
 const ms = require('ms');
 
@@ -28,6 +29,7 @@ module.exports.run = async function (browser, promos) {
 	let fbPage = await facebookLogin(browser);
 	fbPage.setDefaultTimeout(ms('1m'));
 
+	pageListen(fbPage);
 
 	for (let i = 0; i < promos.length; i++) {
 		let promo = promos[i];
@@ -37,11 +39,11 @@ module.exports.run = async function (browser, promos) {
 				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
 				await createPostButton.click();
 			} catch {
-				console.log('Failed to load Facebook page. Refreshing in 5 minutes.');
+				console.log('Failed to load Facebook page. Refreshing in 1 minute.');
 
 				i--;
 
-				wait(ms('5m'));
+				wait(ms('1m'));
 
 				await fbPage.goto('https://www.facebook.com/groups/amazeballdeals');
 
@@ -64,7 +66,7 @@ module.exports.run = async function (browser, promos) {
 			`Link: ${promo.productLinks[0]}\n\n` +
 			endMessage;
 
-			await wait(ms('30s'));
+			await wait(ms('1m'));
 			await fbPage.keyboard.type(msg);
 
 			await wait (ms('1m'));
