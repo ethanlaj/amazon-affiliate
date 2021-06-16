@@ -6,10 +6,6 @@ const START_DATE = /(?<=Start Date:\n<\/span> )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} 
 	PERCENT = /(?<=Save )(.*)(?=%)/,
 	PRODUCT_LINK = /https:\/\/www.amazon.com\/dp\/(.*)(?=&ref=mpc_asin_title)/;
 
-function arraysEqual(a1, a2) {
-	return JSON.stringify(a1)==JSON.stringify(a2);
-}
-
 module.exports.run = async function (browser, rawPromos) {
 	let promos = [];
 
@@ -52,7 +48,7 @@ module.exports.run = async function (browser, rawPromos) {
 
 	let finalPromos = [];
 	for (let i = 0; i < promos.length; i++)
-		if (!finalPromos.find((p) => arraysEqual(p.productLinks, promos[i].productLinks)))
+		if (!finalPromos.find((p) => p.productLinks[0] === promos[i].productLinks[0]))
 			finalPromos.push(promos[i]);
 
 	return finalPromos;
