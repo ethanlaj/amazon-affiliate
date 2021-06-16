@@ -43,7 +43,7 @@ module.exports.run = async function (browser, promos) {
 			//emoji1 += emoji1;
 			//emoji2 += emoji2;
 
-			let msg = `${emoji1} ${promo.percent} percent off!! ${emoji1}\n` +
+			let msg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
 			`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 			`Use code: ${promo.promoCode}\n` +
 			`Link: ${promo.productLinks[0]}\n\n` +
