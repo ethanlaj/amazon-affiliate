@@ -1,5 +1,9 @@
+let ms = require('ms');
+
 module.exports.run = async function (browser) {
 	const page = await browser.newPage();
+	page.setDefaultNavigationTimeout(ms('3m'));
+
 	await page.goto('https://affiliate-program.amazon.com/home/promohub/promocodes');
 
 	try {
