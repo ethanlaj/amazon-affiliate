@@ -1,7 +1,10 @@
 const newBrowser = require('./newBrowser').run,
 	getRawPromos = require('./getRawPromos').run,
 	createPromos = require('./createPromos').run,
-	post = require('./post').run;
+	post = require('./post').run,
+	wait = require('./wait').run;
+
+let ms = require('ms');
 
 let browser;
 
@@ -11,14 +14,25 @@ async function initiate(startPage, pagesAtTime) {
 	if (!browser)
 		browser = await newBrowser();
 
-	let rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
+	let rawPromos;
+	let promos;
 
-	let promos = await createPromos(browser, rawPromos);
+	try {
+		rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
+
+		promos = await createPromos(browser, rawPromos);
+	} catch {
+		console.log('Something went wrong with creating promotions, retrying again in 1 minute..');
+
+		await wait(ms('1m'));
+
+		return initiate(startPage, pagesAtTime);
+	}
 
 	await post(browser, promos);
 
 	initiate(startPage + pagesAtTime, pagesAtTime);
 }
 
-initiate(1, 10);
+initiate(1, 1);
 
