@@ -1,5 +1,6 @@
 const facebookLogin = require('./facebookLogin').run,
-	wait = require('./wait').run;
+	wait = require('./wait').run,
+	checkTimes = require('./checkTimes').run;
 
 const ms = require('ms');
 
@@ -31,7 +32,7 @@ module.exports.run = async function (browser, promos) {
 	for (let i = 0; i < promos.length; i++) {
 		let promo = promos[i];
 
-		if (promo.productLinks[0]) {
+		if (promo.productLinks[0] && checkTimes(promo)) {
 			try {
 				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
 				await createPostButton.click();
