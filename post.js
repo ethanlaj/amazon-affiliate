@@ -63,10 +63,10 @@ module.exports.run = async function (browser, promos) {
 			`Link: ${promo.productLinks[0]}\n\n` +
 			endMessage;
 
-			await wait(ms('5s'));
+			await wait(ms('30s'));
 			await fbPage.keyboard.type(msg);
 
-			await wait (ms('30s'));
+			await wait (ms('1m'));
 
 			try {
 				let submitButton = await fbPage.waitForSelector('aria/Post');
@@ -111,10 +111,10 @@ module.exports.run = async function (browser, promos) {
 
 				await submitFeedback.close();
 				fbPage = await facebookLogin(browser);
-				await wait(ms('28m'));
+				await wait(ms('29m'));
 			}
 
-			await wait(ms('1.5m'));
+			await wait(ms('1m'));
 		}
 	}
 	await fbPage.close();
