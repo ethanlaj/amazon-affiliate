@@ -30,8 +30,20 @@ module.exports.run = async function (browser, promos) {
 		let promo = promos[i];
 
 		if (promo.productLinks[0]) {
-			let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
-			await createPostButton.click();
+			try {
+				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
+				await createPostButton.click();
+			} catch {
+				console.log('Failed to load Facebook page. Refreshing in 5 minutes.');
+
+				i--;
+
+				wait(ms('5m'));
+
+				await fbPage.goto('https://www.facebook.com/groups/amazeballdeals');
+
+				continue;
+			}
 
 			let emoji1 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
 			let emoji2 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
@@ -60,6 +72,9 @@ module.exports.run = async function (browser, promos) {
 			}
 			catch {
 				console.log('Failed to post something on Facebook. Refreshing now...');
+
+				i--;
+
 				await fbPage.goto('https://www.facebook.com/groups/amazeballdeals');
 			}
 

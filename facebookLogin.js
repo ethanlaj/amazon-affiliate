@@ -1,5 +1,11 @@
 module.exports.run = async function (browser) {
 	const page = await browser.newPage();
+
+	await page.setViewport({
+		width: 640,
+		height: 480,
+	});
+
 	await page.goto('https://www.facebook.com/login');
 	try {
 		await page.type('#email', process.env.EMAIL);
