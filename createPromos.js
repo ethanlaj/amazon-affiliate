@@ -26,6 +26,8 @@ module.exports.run = async function (browser, rawPromos) {
 			promos.push({
 				startDate: startDate[0],
 				endDate: endDate[0],
+				startTimestamp: Date.parse(startDate[0].replace('at', '')),
+				endTimestamp: Date.parse(endDate[0].replace('at', '')),
 				promoCode: promoCode[0],
 				promoLink: promoLink[0],
 				promoDesc: promoDesc[0],
