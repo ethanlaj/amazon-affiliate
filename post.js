@@ -25,6 +25,8 @@ let endMessage = '#ad - Codes and discounts are valid at the time of posting and
 
 module.exports.run = async function (browser, promos) {
 	let fbPage = await facebookLogin(browser);
+	fbPage.setDefaultTimeout(ms('1m'));
+
 
 	for (let i = 0; i < promos.length; i++) {
 		let promo = promos[i];
