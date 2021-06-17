@@ -34,5 +34,5 @@ async function initiate(startPage, pagesAtTime) {
 	initiate(startPage + pagesAtTime, pagesAtTime);
 }
 
-initiate(1, 10);
+initiate(11, 10);
 
