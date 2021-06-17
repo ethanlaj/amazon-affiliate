@@ -26,6 +26,7 @@ let endMessage = '#ad - Codes and discounts are valid at the time of posting and
 
 module.exports.run = async function (browser, promos) {
 	let i = 0;
+	let crashed = false;
 
 	let fbPage = await facebookLogin(browser);
 	fbPage.setDefaultTimeout(ms('1m'));
@@ -33,8 +34,11 @@ module.exports.run = async function (browser, promos) {
 	fbPage.on('error', async (msg) => {
 		console.log(msg);
 
-		if (msg === 'Error: Page crashed!') {
+		if (msg.startsWith('Error: Page crashed!')) {
 			console.log('Page crashed. Refreshing in 1 minute...');
+
+			crashed = true;
+
 			await fbPage.close();
 
 			await wait(ms('1m'));
@@ -47,6 +51,9 @@ module.exports.run = async function (browser, promos) {
 	});
 
 	for (i = 0; i < promos.length; i++) {
+		if (crashed)
+			break;
+
 		let promo = promos[i];
 
 		if (promo.productLinks[0] && checkTimes(promo)) {
@@ -134,6 +141,8 @@ module.exports.run = async function (browser, promos) {
 			await wait(ms('1m'));
 		}
 	}
-	await fbPage.close();
+
+	if (!crashed)
+		await fbPage.close();
 	return;
 };
