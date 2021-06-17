@@ -1,9 +1,8 @@
 const facebookLogin = require('./facebookLogin').run,
 	wait = require('./wait').run,
-	checkTimes = require('./checkTimes').run,
-	pageListen = require('./pageListen').run;
+	checkTimes = require('./checkTimes').run;
 
-const ms = require('ms');
+let ms = require('ms');
 
 const EMOJIS = ['😍', '🔥', '💕', '🥰', '😮', '‼️', '🙈', '😎', '😳', '🤑'];
 
@@ -26,12 +25,28 @@ const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additio
 let endMessage = '#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
 
 module.exports.run = async function (browser, promos) {
+	let i = 0;
+
 	let fbPage = await facebookLogin(browser);
 	fbPage.setDefaultTimeout(ms('1m'));
 
-	pageListen(fbPage);
+	fbPage.on('error', async (msg) => {
+		console.log(msg);
 
-	for (let i = 0; i < promos.length; i++) {
+		if (msg === 'Error: Page crashed!') {
+			console.log('Page crashed. Refreshing in 1 minute...');
+			await fbPage.close();
+
+			await wait(ms('1m'));
+
+			if (i !== 0)
+				promos.splice(0, i);
+
+			return module.exports.run(browser, promos);
+		}
+	});
+
+	for (i = 0; i < promos.length; i++) {
 		let promo = promos[i];
 
 		if (promo.productLinks[0] && checkTimes(promo)) {
@@ -57,9 +72,6 @@ module.exports.run = async function (browser, promos) {
 			}
 			let innerMessage = MESSAGES[Math.floor(Math.random() * EMOJIS.length)];
 
-			//emoji1 += emoji1;
-			//emoji2 += emoji2;
-
 			let msg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
 			`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 			`Use code: ${promo.promoCode}\n` +
@@ -81,6 +93,8 @@ module.exports.run = async function (browser, promos) {
 				i--;
 
 				await fbPage.goto('https://www.facebook.com/groups/amazeballdeals');
+
+				continue;
 			}
 
 			await wait(ms('15s'));
