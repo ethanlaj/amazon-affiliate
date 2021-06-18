@@ -1,5 +1,8 @@
+let ms = require('ms');
+
 module.exports.run = async function (browser) {
 	const page = await browser.newPage();
+	page.setDefaultTimeout(ms('1m'));
 
 	await page.setViewport({
 		width: 1500,
