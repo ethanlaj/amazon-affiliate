@@ -9,6 +9,9 @@ let ms = require('ms');
 let browser;
 
 async function initiate(startPage, pagesAtTime) {
+	if (startPage >= 50)
+		startPage = 1;
+
 	console.log(`Running initiate script: startPage=${startPage}, pagesAtTime=${pagesAtTime}`);
 
 	if (!browser)
