@@ -27,6 +27,10 @@ async function initiate(startPage, pagesAtTime) {
 	} catch {
 		console.log('Something went wrong with creating promotions, retrying again in 1 minute..');
 
+		await browser.close();
+
+		browser = undefined;
+
 		await wait(ms('1m'));
 
 		return initiate(startPage, pagesAtTime);
