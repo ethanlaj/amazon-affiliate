@@ -2,8 +2,8 @@ module.exports.run = async function (browser) {
 	const page = await browser.newPage();
 
 	await page.setViewport({
-		width: 1800,
-		height: 1300,
+		width: 1500,
+		height: 900,
 	});
 
 	await page.goto('https://www.facebook.com/login');
