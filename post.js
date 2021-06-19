@@ -29,12 +29,10 @@ module.exports.run = async function (browser, promos) {
 	let fbPage = await facebookLogin(browser);
 
 	fbPage.on('error', async (err) => {
-		console.log(err.toString());
 		if (err.toString().startsWith('Error: Page crashed')) {
 			fbPage.removeAllListeners('error');
-			console.log('\n\nTHIS IS SUPPOSED TO BE WORKING NOW!!!\n\n');
 
-			console.log('Page crashed. Refreshing in 1 minute...');
+			console.log('Page crashed. Refreshing now...');
 
 			await fbPage.close();
 		}
@@ -85,7 +83,9 @@ module.exports.run = async function (browser, promos) {
 			}
 		} catch (e) {
 			console.log(e);
-			await fbPage.close();
+
+			if (!fbPage.isClosed())
+				await fbPage.close();
 		}
 	}
 
