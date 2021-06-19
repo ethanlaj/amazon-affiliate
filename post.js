@@ -34,7 +34,8 @@ module.exports.run = async function (browser, promos) {
 
 			console.log('Page crashed. Refreshing now...');
 
-			await fbPage.close();
+			if (!fbPage.isClosed())
+				await fbPage.close();
 		}
 	});
 
