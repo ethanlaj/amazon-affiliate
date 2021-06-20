@@ -13,7 +13,7 @@ module.exports.run = async function (browser, fbPage) {
 		let links = await fbPage.$$eval('a', (as) => as.map((a) => a.href))
 			.then((r) => r.filter((l) => CONTACT_LINK.test(l) )).catch(() => {});
 		let link = links[0];
-		await fbPage.close();
+		await fbPage.close().catch(() => {});
 
 		let submitFeedback = await browser.newPage();
 		await submitFeedback.goto(link);
