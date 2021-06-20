@@ -1,5 +1,10 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
 
+async function close (page) {
+	page.closed = true;
+	return await page.close().catch(() => {});
+}
+
 module.exports.run = async function (browser, fbPage) {
 	let innerText = await fbPage.evaluate(() => {
 		/* eslint-disable-next-line no-undef */
@@ -13,7 +18,8 @@ module.exports.run = async function (browser, fbPage) {
 		let links = await fbPage.$$eval('a', (as) => as.map((a) => a.href))
 			.then((r) => r.filter((l) => CONTACT_LINK.test(l) )).catch(() => {});
 		let link = links[0];
-		await fbPage.close().catch(() => {});
+
+		await close(fbPage);
 
 		let submitFeedback = await browser.newPage();
 		await submitFeedback.goto(link);

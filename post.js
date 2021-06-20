@@ -23,6 +23,11 @@ const MESSAGES = [
 
 let endMessage = '#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
 
+async function close (page) {
+	page.closed = true;
+	return await page.close().catch(() => {});
+}
+
 module.exports.run = async function (browser, promos) {
 	let i = 0;
 
@@ -34,13 +39,15 @@ module.exports.run = async function (browser, promos) {
 
 			console.log('Page crashed. Refreshing now...');
 
-			await fbPage.close().catch(() => {});
+			await close(fbPage);
+
+			return;
 		}
 	});
 
 	for (i = 0; i < promos.length; i++) {
 		try {
-			if (fbPage.isClosed())
+			if (fbPage.closed)
 				fbPage = await facebookLogin(browser);
 
 			let promo = promos[i];
@@ -84,10 +91,11 @@ module.exports.run = async function (browser, promos) {
 		} catch (e) {
 			console.log(e);
 
-			await fbPage.close().catch(() => {});
+			await close(fbPage);
 		}
 	}
 
-	await fbPage.close().catch(() => {})
+	await close(fbPage);
+
 	return;
 };
