@@ -88,6 +88,6 @@ module.exports.run = async function (browser, promos) {
 		}
 	}
 
-	await fbPage.close();
+	await fbPage.close().catch(() => {})
 	return;
 };
