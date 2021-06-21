@@ -86,6 +86,8 @@ module.exports.run = async function (browser, promos) {
 					fbPage = await facebookLogin(browser);
 				}
 
+				await close(fbPage);
+
 				await wait(ms('1m'));
 			}
 		} catch (e) {
