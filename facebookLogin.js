@@ -9,20 +9,21 @@ module.exports.run = async function (browser) {
 		height: 900,
 	});
 
-	await page.goto('https://www.facebook.com/login');
+	await page.goto('https://www.facebook.com/groups/amazeballdeals');
 	try {
-		await page.type('#email', process.env.EMAIL);
-		await page.type('#pass', process.env.FB_PW);
+		let email = await page.waitForSelector('aria/Email or Phone');
+		await email.type(process.env.EMAIL);
+
+		let password = await page.waitForSelector('aria/Password');
+		await password.type(process.env.FB_PW);
+
+		let loginButton = await page.waitForSelector('aria/Accessible login button');
 
 		await Promise.all([
 			page.waitForNavigation(),
-			page.click('#loginbutton')
+			loginButton.click(),
 		]);
-	} catch {
-		console.log('Most likely already logged into Facebook, skipping logging in again.');
-	}
-
-	await page.goto('https://www.facebook.com/groups/amazeballdeals');
+	} catch {() => {};}
 
 	return page;
 };
