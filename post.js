@@ -28,31 +28,38 @@ async function close (page) {
 	return await page.close().catch(() => {});
 }
 
-module.exports.run = async function (browser, promos) {
-	let i = 0;
-
-	let fbPage = await facebookLogin(browser);
-
-	fbPage.on('error', async (err) => {
+function listen (page) {
+	page.on('error', async (err) => {
 		if (err.toString().startsWith('Error: Page crashed')) {
-			fbPage.removeAllListeners('error');
+			page.removeAllListeners('error');
 
 			console.log('Page crashed. Refreshing now...');
 
-			await close(fbPage);
+			await close(page);
 
 			return;
 		}
 	});
+}
+
+module.exports.run = async function (browser, promos) {
+	let fbPage = await facebookLogin(browser);
+
+	let promo;
+	let i;
 
 	for (i = 0; i < promos.length; i++) {
 		try {
 			if (fbPage.closed)
 				fbPage = await facebookLogin(browser);
 
-			let promo = promos[i];
+			listen(fbPage);
 
-			if (promo.productLinks[0] && checkTimes(promo)) {
+			promo = promos[i];
+
+			if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= 3) {
+				promo.tries++;
+
 				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
 				await createPostButton.click();
 
@@ -77,10 +84,14 @@ module.exports.run = async function (browser, promos) {
 				let submitButton = await fbPage.waitForSelector('aria/Post');
 				await submitButton.click();
 
+				promo.posted = true;
+
 				await wait(ms('15s'));
 				let flagged = await checkFlagged(browser, fbPage);
 				if (flagged) {
 					i--;
+
+					promo.tries--;
 
 					await wait(ms('29m'));
 					fbPage = await facebookLogin(browser);
@@ -88,10 +99,13 @@ module.exports.run = async function (browser, promos) {
 
 				await close(fbPage);
 
+				fbPage.removeAllListeners('error');
+
 				await wait(ms('1m'));
 			}
-		} catch (e) {
-			console.log(e);
+		} catch {
+			if (!promo.posted)
+				i--;
 
 			await close(fbPage);
 		}

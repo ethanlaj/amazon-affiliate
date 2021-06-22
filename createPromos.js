@@ -28,6 +28,8 @@ module.exports.run = async function (browser, rawPromos) {
 				promoLink: promoLink[0],
 				promoDesc: promoDesc[0],
 				percent: Number(percent[0]),
+				tries: 0,
+				posted: false,
 			});
 	}
 
