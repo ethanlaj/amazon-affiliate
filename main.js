@@ -9,7 +9,7 @@ let ms = require('ms');
 let browser;
 
 async function initiate(startPage, pagesAtTime) {
-	if (startPage >= 50)
+	if (startPage >= 51)
 		startPage = 1;
 
 	console.log(`Running initiate script: startPage=${startPage}, pagesAtTime=${pagesAtTime}`);
@@ -37,6 +37,10 @@ async function initiate(startPage, pagesAtTime) {
 	}
 
 	await post(browser, promos);
+
+	await browser.close();
+
+	browser = undefined;
 
 	initiate(startPage + pagesAtTime, pagesAtTime);
 }

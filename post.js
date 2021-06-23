@@ -57,7 +57,7 @@ module.exports.run = async function (browser, promos) {
 
 			promo = promos[i];
 
-			if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= 3) {
+			if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= 5) {
 				promo.tries++;
 
 				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
