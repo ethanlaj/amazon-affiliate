@@ -1,8 +1,10 @@
 let ms = require('ms');
+const doNotLoad = require('./doNotLoad').run;
 
 module.exports.run = async function (browser) {
 	const page = await browser.newPage();
 	page.setDefaultTimeout(ms('3m'));
+	await doNotLoad(page);
 
 	await page.goto('https://affiliate-program.amazon.com/home/promohub/promocodes');
 
