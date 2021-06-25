@@ -21,8 +21,10 @@ async function initiate(startPage, pagesAtTime) {
 	let promos;
 
 	try {
+		console.log('Running raw promos...');
 		rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
 
+		console.log('Running create promos...');
 		promos = await createPromos(browser, rawPromos);
 	} catch {
 		console.log('Something went wrong with creating promotions, retrying again in 1 minute..');
@@ -36,8 +38,10 @@ async function initiate(startPage, pagesAtTime) {
 		return initiate(startPage, pagesAtTime);
 	}
 
+	console.log('Running post...');
 	await post(browser, promos);
 
+	console.log('All promos have been posted, closing browser...');
 	await browser.close();
 
 	browser = undefined;
