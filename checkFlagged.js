@@ -29,8 +29,10 @@ module.exports.run = async function (browser, fbPage) {
 			await explainError.type('All I was doing was posting amazon deals for my Facebook page.');
 			const submit = await submitFeedback.waitForSelector('aria/Send');
 			await submit.click();
-		} catch {
-			console.log('Error submitting feedback to facebook');
+		} catch (e) {
+			console.log('\n\n\nError submitting feedback to facebook');
+			console.log(e);
+			console.log('\n\n\n');
 		}
 
 		await submitFeedback.close();
