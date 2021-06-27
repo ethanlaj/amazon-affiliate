@@ -39,14 +39,14 @@ module.exports.run = async function (browser, rawPromos) {
 	await doNotLoad(promoPage);
 
 	for (let promo of promos) {
-		/*await promoPage.goto(promo.promoLink);
+		await promoPage.goto(promo.promoLink);
 		let links = await promoPage.$$eval('a', (as) => as.map((a) => a.href))
 			.then((r) => r.filter((l) => PRODUCT_LINK.test(l) )).catch(() => {});
 
 		let formattedLinks = [];
 		for (let link of links)
-			formattedLinks.push(PRODUCT_LINK.exec(link)[0] + '&tag=amazeballdeal-20');*/
-		promo.productLinks = ['https://affiliate-program.amazon.com'];
+			formattedLinks.push(PRODUCT_LINK.exec(link)[0] + '&tag=amazeballdeal-20');
+		promo.productLinks = formattedLinks;
 	}
 
 	await promoPage.close();
