@@ -1,4 +1,5 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
+const wait = require('./wait').run;
 
 async function close (page) {
 	page.closed = true;
@@ -34,6 +35,8 @@ module.exports.run = async function (browser, fbPage) {
 			console.log(e);
 			console.log('\n\n\n');
 		}
+
+		await wait(ms('15s'));
 
 		await submitFeedback.close();
 
