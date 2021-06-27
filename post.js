@@ -77,10 +77,10 @@ module.exports.run = async function (browser, promos) {
 						`Link: ${promo.productLinks[0]}\n\n` +
 						endMessage;
 
-				await wait(ms('1m'));
+				await wait(ms('5s'));
 				await fbPage.keyboard.type(msg);
 
-				await wait(ms('1m'));
+				await wait(ms('5s'));
 
 				let submitButton = await fbPage.waitForSelector('aria/Post');
 				await submitButton.click();
