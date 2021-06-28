@@ -1,9 +1,6 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
 const doNotLoad = require('./doNotLoad').run;
 
-const wait = require('./wait').run;
-const ms = require('ms');
-
 async function close (page) {
 	page.closed = true;
 	return await page.close().catch(() => {});
@@ -31,24 +28,16 @@ module.exports.run = async function (browser, fbPage) {
 		await submitFeedback.goto(link);
 
 		try {
-			let explainError;
-			let tries = 0;
-			do {
-				tries++;
-
-				await wait(ms('2s'));
-				explainError = await submitFeedback.$('textarea');
-			} while (!explainError && tries <= 30);
-
-			await explainError.type('All I was doing was posting amazon deals for my Facebook page.');
-
+			let explainError = await submitFeedback.waitForSelector('aria/Please explain why you think this was an error');
+			await explainError.focus();
+			await submitFeedback.keyboard.type('All I was doing was posting amazon deals for my Facebook page.');
 			let submit = await submitFeedback.waitForSelector('aria/Send');
 			await submit.click();
 		} catch (e) {
-			console.log('\n\n\nError submitting feedback to facebook');
-			console.log(e);
-			console.log('\n\n\n');
+			console.log('Error submitting feedback to facebook');
 		}
+
+		await submitFeedback.close();
 
 		return true;
 	}
