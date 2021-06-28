@@ -60,12 +60,11 @@ module.exports.run = async function (browser, promos) {
 	if (typeHere.length === 1)
 		throw new Error('Could not find typing space.');
 
+	console.log(typeHere[1].focus);
+
 	await wait(ms('15s'));
 
-	let id = await fbPage.evaluateHandle(typeHere[1]);
-	console.log(id);
-
-	await fbPage.type(`#${typeHere[1].id}`, `😍 55% off!! 😍
+	await typeHere[1].type(`😍 55% off!! 😍
 🤑 I'm sending this to my friend! 🤑
 
 Use code: 55UVZT1B
@@ -75,7 +74,7 @@ Link: https://www.amazon.com/dp/B07YJBVZYR?m=A31J6EAZTKAANS...
 
 	await wait(ms('5s'));
 	let submitButton = await fbPage.waitForSelector('aria/Post');
-	await submitButton.click();
+	//await submitButton.click();
 
 	await wait(ms('5s'));
 	await checkFlagged(browser, fbPage);
