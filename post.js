@@ -62,8 +62,10 @@ module.exports.run = async function (browser, promos) {
 
 	await wait(ms('15s'));
 
-	await typeHere[1].type(
-		`😍 55% off!! 😍
+	let id = await fbPage.evaluateHandle(typeHere[1]);
+	console.log(id);
+
+	await fbPage.type(`#${typeHere[1].id}`, `😍 55% off!! 😍
 🤑 I'm sending this to my friend! 🤑
 
 Use code: 55UVZT1B
