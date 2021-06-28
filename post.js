@@ -77,17 +77,17 @@ module.exports.run = async function (browser, promos) {
 						`Link: ${promo.productLinks[0]}\n\n` +
 						endMessage;
 
-				await wait(ms('15s'));
+				await wait(ms('1m'));
 				await fbPage.keyboard.type(msg);
 
-				await wait(ms('15s'));
+				await wait(ms('1m'));
 
 				let submitButton = await fbPage.waitForSelector('aria/Post');
 				await submitButton.click();
 
 				promo.posted = true;
 
-				await wait(ms('10s'));
+				await wait(ms('15s'));
 				let flagged = await checkFlagged(browser, fbPage);
 				if (flagged) {
 					i--;
