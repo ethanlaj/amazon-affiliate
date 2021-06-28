@@ -7,10 +7,10 @@ module.exports.run = async function (browser) {
 
 	await page.setViewport({
 		width: 1500,
-		height: 900,
+		height: 700,
 	});
 
-	await doNotLoad(page);
+	//await doNotLoad(page);
 
 	await page.goto('https://www.facebook.com/groups/amazeballdeals');
 	try {
