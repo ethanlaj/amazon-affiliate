@@ -45,41 +45,7 @@ function listen (page) {
 module.exports.run = async function (browser, promos) {
 	let fbPage = await facebookLogin(browser);
 
-	let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
-	await createPostButton.click();
-
-	let typeHere;
-	let tries = 0;
-	do {
-		tries++;
-
-		await wait(ms('2s'));
-		typeHere = await fbPage.$$('aria/Create a public post…');
-	} while ((!typeHere || typeHere.length === 1) && tries <= 30);
-
-	if (typeHere.length === 1)
-		throw new Error('Could not find typing space.');
-
-	await wait(ms('15s'));
-
-	await typeHere[1].type(
-		`😍 55% off!! 😍
-🤑 I'm sending this to my friend! 🤑
-
-Use code: 55UVZT1B
-Link: https://www.amazon.com/dp/B07YJBVZYR?m=A31J6EAZTKAANS...
-
-#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.`);
-
-	await wait(ms('5s'));
-	let submitButton = await fbPage.waitForSelector('aria/Post');
-	await submitButton.click();
-
-	await wait(ms('5s'));
-	await checkFlagged(browser, fbPage);
-
-
-	/*let promo;
+	let promo;
 	let i;
 
 	for (i = 0; i < promos.length; i++) {
@@ -146,8 +112,7 @@ Link: https://www.amazon.com/dp/B07YJBVZYR?m=A31J6EAZTKAANS...
 
 			await close(fbPage);
 		}
-	}*/
-	await wait(ms('1m'));
+	}
 
 	await close(fbPage);
 

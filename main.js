@@ -9,15 +9,15 @@ let ms = require('ms');
 let browser;
 
 async function initiate(startPage, pagesAtTime) {
-	/*if (startPage >= 51)
+	if (startPage >= 51)
 		startPage = 1;
 
 	console.log(`Running initiate script: startPage=${startPage}, pagesAtTime=${pagesAtTime}`);
-*/
+
 	if (!browser)
 		browser = await newBrowser();
 
-	/*let rawPromos;
+	let rawPromos;
 	let promos;
 
 	try {
@@ -38,17 +38,15 @@ async function initiate(startPage, pagesAtTime) {
 		return initiate(startPage, pagesAtTime);
 	}
 
-	console.log('Running post...');*/
-
-	//await post(browser, promos);
-	await post(browser);
+	console.log('Running post...');
+	await post(browser, promos);
 
 	console.log('All promos have been posted, closing browser...');
-	//await browser.close();
+	await browser.close();
 
 	browser = undefined;
 
-	//initiate(startPage + pagesAtTime, pagesAtTime);
+	initiate(startPage + pagesAtTime, pagesAtTime);
 }
 
 initiate(1, 10);
