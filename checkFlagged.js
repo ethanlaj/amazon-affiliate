@@ -29,7 +29,7 @@ module.exports.run = async function (browser, fbPage) {
 
 		try {
 			let explainError = await submitFeedback.waitForSelector('aria/Please explain why you think this was an error');
-			await explainError.focus();
+			await explainError.click();
 			await submitFeedback.keyboard.type('All I was doing was posting amazon deals for my Facebook page.');
 			let submit = await submitFeedback.waitForSelector('aria/Send');
 			await submit.click();
