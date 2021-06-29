@@ -56,8 +56,9 @@ module.exports.run = async function (browser, promos) {
 
 	await wait(ms('30s'));
 
-	await typeHere[1].click();
-	await fbPage.keyboard.type(`😍 55% off!! 😍
+	console.log(typeHere[1]);
+
+	await typeHere[1].type(`😍 55% off!! 😍
 🤑 I'm sending this to my friend! 🤑
 
 Use code: 55UVZT1B
