@@ -51,20 +51,13 @@ module.exports.run = async function (browser, promos) {
 	await wait(ms('10s'));
 	let typeHere = await fbPage.$$('aria/Create a public post…');
 
-	if (typeHere.length === 1)
+	typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
+	if (!typeHere)
 		throw new Error('Could not find typing space.');
 
 	await wait(ms('10s'));
 
-	console.log('\n\n');
-	console.log(typeHere.length);
-	for (let i = 0; i < typeHere.length; i++) {
-		console.log(`\n${i}:`);
-		console.log(typeHere[i]._remoteObject);
-	}
-
-
-	await typeHere[1].type(`😍 55% off!! 😍
+	await typeHere.type(`😍 55% off!! 😍
 🤑 I'm sending this to my friend! 🤑
 
 Use code: 55UVZT1B
