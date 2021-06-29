@@ -13,6 +13,8 @@ module.exports.run = async function () {
 
 	let browser = await puppeteer.launch(options);
 
+	console.log(await browser.version());
+
 	let context = browser.defaultBrowserContext();
 	context.overridePermissions('https://www.facebook.com', ['geolocation', 'notifications']);
 
