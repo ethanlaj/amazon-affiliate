@@ -60,11 +60,9 @@ module.exports.run = async function (browser, promos) {
 	if (typeHere.length === 1)
 		throw new Error('Could not find typing space.');
 
-	await wait(ms('15s'));
+	await wait(ms('30s'));
 
-	console.log(typeHere[1].focus);
-	await typeHere[1].focus();
-	await fbPage.keyboard.type(`😍 55% off!! 😍
+	await typeHere[1].type(`😍 55% off!! 😍
 🤑 I'm sending this to my friend! 🤑
 
 Use code: 55UVZT1B
