@@ -77,7 +77,7 @@ module.exports.run = async function (browser, promos) {
 						`Link: ${promo.productLinks[0]}\n\n` +
 						endMessage;
 
-				await wait(ms('1m'));
+				await wait(ms('35s'));
 				let typeHere = await fbPage.$$('aria/Create a public post…');
 
 				typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
@@ -85,21 +85,21 @@ module.exports.run = async function (browser, promos) {
 					throw new Error('Could not find typing space.');
 				await typeHere.type(msg);
 
-				await wait(ms('1m'));
+				await wait(ms('45s'));
 
 				let submitButton = await fbPage.waitForSelector('aria/Post');
 				await submitButton.click();
 
 				promo.posted = true;
 
-				await wait(ms('15s'));
+				await wait(ms('8s'));
 				let flagged = await checkFlagged(browser, fbPage);
 				if (flagged) {
 					i--;
 
 					promo.tries--;
 
-					await wait(ms('29m'));
+					await wait(ms('20m'));
 					fbPage = await facebookLogin(browser);
 				}
 
@@ -109,7 +109,7 @@ module.exports.run = async function (browser, promos) {
 
 				console.log('Successfully posted...');
 
-				await wait(ms('1m'));
+				await wait(ms('10s'));
 			}
 		} catch {
 			if (!promo.posted)
@@ -118,7 +118,7 @@ module.exports.run = async function (browser, promos) {
 			await close(fbPage);
 		}
 	}
-	await wait(ms('1m'));
+	await wait(ms('10s'));
 
 	await close(fbPage);
 
