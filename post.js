@@ -48,15 +48,21 @@ module.exports.run = async function (browser, promos) {
 	let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
 	await createPostButton.click();
 
-	await wait(ms('30s'));
+	await wait(ms('10s'));
 	let typeHere = await fbPage.$$('aria/Create a public post…');
 
 	if (typeHere.length === 1)
 		throw new Error('Could not find typing space.');
 
-	await wait(ms('30s'));
+	await wait(ms('10s'));
 
+	console.log('\n\n');
+	console.log(typeHere.length);
+	console.log('\n\n1:');
+	console.log(typeHere[0]);
+	console.log('\n\n\n\n2:');
 	console.log(typeHere[1]);
+
 
 	await typeHere[1].type(`😍 55% off!! 😍
 🤑 I'm sending this to my friend! 🤑
