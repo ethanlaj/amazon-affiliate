@@ -28,16 +28,24 @@ module.exports.run = async function (browser, fbPage) {
 		await submitFeedback.goto(link);
 
 		try {
-			let explainError = await submitFeedback.waitForSelector('aria/Please explain why you think this was an error');
-			await explainError.click();
-			await submitFeedback.keyboard.type('All I was doing was posting amazon deals for my Facebook page.');
-			let submit = await submitFeedback.waitForSelector('aria/Send');
-			await submit.click();
+			let explainError = await submitFeedback.$$('aria/Please explain why you think this was an error');
+
+			for (let i = 0; i < explainError.length; i++) {
+				console.log(`\n\n${i}:`);
+				console.log(explainError[i]._remoteObject);
+			}
+
+			await explainError[explainError.length - 1].type('All I was doing was posting amazon deals for my Facebook page.');
+			// Test to see if last element in array works
+
+
+			/*let submit = await submitFeedback.waitForSelector('aria/Send');
+			await submit.click();*/
 		} catch (e) {
 			console.log('Error submitting feedback to facebook');
 		}
 
-		await submitFeedback.close();
+		//await submitFeedback.close();
 
 		return true;
 	}
