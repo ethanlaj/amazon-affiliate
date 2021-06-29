@@ -58,10 +58,10 @@ module.exports.run = async function (browser, promos) {
 
 	console.log('\n\n');
 	console.log(typeHere.length);
-	console.log('\n\n1:');
-	console.log(typeHere[0]);
-	console.log('\n\n\n\n2:');
-	console.log(typeHere[1]);
+	for (let i = 0; i < typeHere.length; i++) {
+		console.log(`\n${i}:`);
+		console.log(typeHere[i]._remoteObject);
+	}
 
 
 	await typeHere[1].type(`😍 55% off!! 😍
