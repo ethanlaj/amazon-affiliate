@@ -14,7 +14,7 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage) {
 	if (startPage >= maxPage)
 		startPage = 1;
 
-	console.log(`Running initiate script: startPage=${startPage}, pagesAtTime=${pagesAtTime}, login=${facebookLoginInfo.id}`);
+	console.log(`Running initiate script: login=${facebookLoginInfo.id}, startPage=${startPage}, pagesAtTime=${pagesAtTime}, maxPage=${maxPage}`);
 
 	if (!browser)
 		browser = await newBrowser();
