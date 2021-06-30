@@ -1,5 +1,6 @@
 let ms = require('ms');
 const doNotLoad = require('./doNotLoad').run;
+const passwords = require('./passwords').amazon;
 
 module.exports.run = async function (browser) {
 	const page = await browser.newPage();
@@ -9,8 +10,8 @@ module.exports.run = async function (browser) {
 	await page.goto('https://affiliate-program.amazon.com/home/promohub/promocodes');
 
 	try {
-		await page.type('#ap_email', process.env.EMAIL).catch(() => {});
-		await page.type('#ap_password', process.env.AMAZON_PW);
+		await page.type('#ap_email', passwords.email).catch(() => {});
+		await page.type('#ap_password', passwords.pw);
 
 		await Promise.all([
 			page.waitForNavigation(),

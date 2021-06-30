@@ -42,8 +42,8 @@ function listen (page) {
 	});
 }
 
-module.exports.run = async function (browser, promos) {
-	let fbPage = await facebookLogin(browser);
+module.exports.run = async function (browser, promos, loginInfo) {
+	let fbPage = await facebookLogin(browser, loginInfo);
 
 	let promo;
 	let i;
@@ -51,14 +51,13 @@ module.exports.run = async function (browser, promos) {
 	for (i = 0; i < promos.length; i++) {
 		try {
 			if (fbPage.closed)
-				fbPage = await facebookLogin(browser);
+				fbPage = await facebookLogin(browser, loginInfo);
 
 			listen(fbPage);
 
 			promo = promos[i];
 
 			if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= 5) {
-				console.log('Posting...');
 				promo.tries++;
 
 				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
@@ -100,14 +99,11 @@ module.exports.run = async function (browser, promos) {
 					promo.tries--;
 
 					await wait(ms('20m'));
-					fbPage = await facebookLogin(browser);
 				}
 
 				await close(fbPage);
 
 				fbPage.removeAllListeners('error');
-
-				console.log('Successfully posted...');
 
 				await wait(ms('10s'));
 			}
