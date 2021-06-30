@@ -8,9 +8,7 @@ const newBrowser = require('./newBrowser').run,
 
 let ms = require('ms');
 
-let browser;
-
-async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage) {
+async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser) {
 	if (startPage >= maxPage)
 		startPage = 1;
 
@@ -35,7 +33,7 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage) {
 
 		await wait(ms('15s'));
 
-		return initiate(startPage, pagesAtTime);
+		return initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser);
 	}
 
 	await post(browser, promos, facebookLoginInfo);
@@ -51,9 +49,11 @@ async function start() {
 	let initialPage = 1;
 
 	for (let login of passwords) {
+		let browser;
+
 		let maxPage = initialPage + 50;
 
-		initiate(login, initialPage, 10, maxPage);
+		initiate(login, initialPage, 10, maxPage, browser);
 
 		initialPage += 50;
 
