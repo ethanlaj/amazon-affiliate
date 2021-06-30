@@ -1,5 +1,6 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
 const doNotLoad = require('./doNotLoad').run;
+const newBrowser = require('./newBrowser').run;
 
 async function close (page) {
 	page.closed = true;
@@ -21,6 +22,9 @@ module.exports.run = async function (browser, fbPage) {
 		let link = links[0];
 
 		await close(fbPage);
+
+		// NEXT LINE IS FOR TESTING ONLY; DELETE WHEN DONE
+		browser = await newBrowser();
 
 		let submitFeedback = await browser.newPage();
 		await doNotLoad(submitFeedback);

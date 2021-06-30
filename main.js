@@ -10,7 +10,7 @@ let ms = require('ms');
 
 async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser) {
 	if (startPage >= maxPage)
-		startPage = 1;
+		startPage = maxPage - 50;
 
 	console.log(`Running initiate script: login=${facebookLoginInfo.id}, startPage=${startPage}, pagesAtTime=${pagesAtTime}, maxPage=${maxPage}`);
 
