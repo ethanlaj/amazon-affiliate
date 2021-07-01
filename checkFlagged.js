@@ -23,9 +23,6 @@ module.exports.run = async function (browser, fbPage) {
 
 		await close(fbPage);
 
-		// NEXT LINE IS FOR TESTING ONLY; DELETE WHEN DONE
-		browser = await newBrowser();
-
 		let submitFeedback = await browser.newPage();
 		await doNotLoad(submitFeedback);
 
