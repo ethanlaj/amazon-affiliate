@@ -42,8 +42,8 @@ function listen (page) {
 	});
 }
 
-module.exports.run = async function (browser, promos) {
-	let fbPage = await facebookLogin(browser);
+module.exports.run = async function (browser, promos, loginInfo) {
+	let fbPage = await facebookLogin(browser, loginInfo);
 
 	let promo;
 	let i;
@@ -51,14 +51,13 @@ module.exports.run = async function (browser, promos) {
 	for (i = 0; i < promos.length; i++) {
 		try {
 			if (fbPage.closed)
-				fbPage = await facebookLogin(browser);
+				fbPage = await facebookLogin(browser, loginInfo);
 
 			listen(fbPage);
 
 			promo = promos[i];
 
 			if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= 5) {
-				console.log('Posting...');
 				promo.tries++;
 
 				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
@@ -77,34 +76,36 @@ module.exports.run = async function (browser, promos) {
 						`Link: ${promo.productLinks[0]}\n\n` +
 						endMessage;
 
-				await wait(ms('1m'));
-				await fbPage.keyboard.type(msg);
+				await wait(ms('35s'));
+				let typeHere = await fbPage.$$('aria/Create a public post…');
 
-				await wait(ms('1m'));
+				typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
+				if (!typeHere)
+					throw new Error('Could not find post typing space.');
+				await typeHere.type(msg);
+
+				await wait(ms('45s'));
 
 				let submitButton = await fbPage.waitForSelector('aria/Post');
 				await submitButton.click();
 
 				promo.posted = true;
 
-				await wait(ms('15s'));
+				await wait(ms('8s'));
 				let flagged = await checkFlagged(browser, fbPage);
 				if (flagged) {
 					i--;
 
 					promo.tries--;
 
-					await wait(ms('29m'));
-					fbPage = await facebookLogin(browser);
+					await wait(ms('20m'));
 				}
 
 				await close(fbPage);
 
 				fbPage.removeAllListeners('error');
 
-				console.log('Successfully posted...');
-
-				await wait(ms('1m'));
+				await wait(ms('10s'));
 			}
 		} catch {
 			if (!promo.posted)
@@ -113,6 +114,8 @@ module.exports.run = async function (browser, promos) {
 			await close(fbPage);
 		}
 	}
+  
+	await wait(ms('10s'));
 
 	await close(fbPage);
 
