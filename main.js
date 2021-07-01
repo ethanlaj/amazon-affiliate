@@ -53,7 +53,7 @@ async function start() {
 
 		let maxPage = initialPage + 50;
 
-		initiate(login, initialPage, 1, maxPage, browser);
+		initiate(login, initialPage, 10, maxPage, browser);
 
 		initialPage += 50;
 

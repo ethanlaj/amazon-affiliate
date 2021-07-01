@@ -30,11 +30,6 @@ module.exports.run = async function (browser, fbPage) {
 		try {
 			let explainError = await submitFeedback.$$('aria/Please explain why you think this was an error');
 
-			for (let i = 0; i < explainError.length; i++) {
-				console.log(`\n\n${i}:`);
-				console.log(explainError[i]._remoteObject);
-			}
-
 			explainError = explainError.find((e) => e._remoteObject.description.startsWith('textarea#'));
 			if (!explainError)
 				throw new Error('Could not find flagged typing space.');
@@ -47,7 +42,7 @@ module.exports.run = async function (browser, fbPage) {
 			console.log('Error submitting feedback to facebook');
 		}
 
-		//await submitFeedback.close();
+		await submitFeedback.close();
 
 		return true;
 	}
