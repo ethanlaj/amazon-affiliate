@@ -33,9 +33,9 @@ module.exports.run = async function (browser, fbPage) {
 			explainError = explainError.find((e) => e._remoteObject.description.startsWith('textarea#'));
 			if (!explainError)
 				throw new Error('Could not find flagged typing space.');
-      
+
 			await explainError.type('All I was doing was posting amazon deals for my Facebook page.');
-      
+
 			let submit = await submitFeedback.waitForSelector('aria/Send');
 			await submit.click();
 		} catch (e) {
