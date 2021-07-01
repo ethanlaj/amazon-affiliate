@@ -81,7 +81,7 @@ module.exports.run = async function (browser, promos, loginInfo) {
 
 				typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
 				if (!typeHere)
-					throw new Error('Could not find typing space.');
+					throw new Error('Could not find post typing space.');
 				await typeHere.type(msg);
 
 				await wait(ms('45s'));

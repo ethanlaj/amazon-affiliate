@@ -1,6 +1,5 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
 const doNotLoad = require('./doNotLoad').run;
-const newBrowser = require('./newBrowser').run;
 
 async function close (page) {
 	page.closed = true;
@@ -36,12 +35,14 @@ module.exports.run = async function (browser, fbPage) {
 				console.log(explainError[i]._remoteObject);
 			}
 
-			await explainError[explainError.length - 1].type('All I was doing was posting amazon deals for my Facebook page.');
-			// Test to see if last element in array works
+			explainError = explainError.find((e) => e._remoteObject.description.startsWith('textarea#'));
+			if (!explainError)
+				throw new Error('Could not find flagged typing space.');
 
+			await explainError.type('All I was doing was posting amazon deals for my Facebook page.');
 
-			/*let submit = await submitFeedback.waitForSelector('aria/Send');
-			await submit.click();*/
+			let submit = await submitFeedback.waitForSelector('aria/Send');
+			await submit.click();
 		} catch (e) {
 			console.log('Error submitting feedback to facebook');
 		}
