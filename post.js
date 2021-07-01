@@ -114,6 +114,7 @@ module.exports.run = async function (browser, promos, loginInfo) {
 			await close(fbPage);
 		}
 	}
+  
 	await wait(ms('10s'));
 
 	await close(fbPage);

@@ -7,7 +7,7 @@ module.exports.run = async function (browser, loginInfo) {
 
 	await page.setViewport({
 		width: 1500,
-		height: 700,
+		height: 900,
 	});
 
 	await doNotLoad(page);
