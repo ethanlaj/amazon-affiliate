@@ -24,8 +24,9 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 		rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
 
 		promos = await createPromos(browser, rawPromos);
-	} catch {
-		console.log('Something went wrong with creating promotions, retrying again in 15 seconds..');
+	} catch (e) {
+		console.log(e);
+		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
 
 		await browser.close();
 
@@ -57,7 +58,7 @@ async function start() {
 
 		initialPage += 50;
 
-		await wait(ms('20m'));
+		await wait(ms('25m'));
 	}
 }
 

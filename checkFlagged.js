@@ -12,7 +12,8 @@ module.exports.run = async function (browser, fbPage) {
 		return document.querySelector('body').innerText;
 	});
 
-	let flagged = innerText.includes('We limit how often you can post, comment or do other things in a given amount of time in order to help protect the community from spam. You can try again later.');
+	let flagged = innerText.includes('We limit how often you can post, comment or do other things in a given amount of time in order to help protect the community from spam. You can try again later.') ||
+				innerText.includes('You\'re temporarily restricted from posting to groups');
 	if (flagged) {
 		console.log('Facebook flagged bot for spam. Trying again in 20 minutes.');
 

@@ -101,7 +101,7 @@ module.exports.run = async function (browser, promos, loginInfo) {
 
 					await wait(ms('20m'));
 				} else {
-					await wait(ms('7s'));
+					await wait(ms('40s'));
 
 					await noSalesPost(fbPage);
 				}
@@ -110,7 +110,7 @@ module.exports.run = async function (browser, promos, loginInfo) {
 
 				fbPage.removeAllListeners('error');
 
-				await wait(ms('10s'));
+				await wait(ms('15s'));
 			}
 		} catch {
 			if (!promo.posted)
