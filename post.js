@@ -1,7 +1,8 @@
 const facebookLogin = require('./facebookLogin').run,
 	wait = require('./wait').run,
 	checkTimes = require('./checkTimes').run,
-	checkFlagged = require('./checkFlagged').run;
+	checkFlagged = require('./checkFlagged').run,
+	noSalesPost = require('./noSalesPost').run;
 
 let ms = require('ms');
 
@@ -45,7 +46,38 @@ function listen (page) {
 module.exports.run = async function (browser, promos, loginInfo) {
 	let fbPage = await facebookLogin(browser, loginInfo);
 
-	let promo;
+
+	let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
+	await createPostButton.click();
+
+	/* DELETE HERE */
+	let msg = `🤑 50% off!! 🤑
+	😎 Wow! I've never seen such a good deal before! 😎
+	Use code: 50I8JAFA
+	Link: https://www.amazon.com/dp/B08VDL19QB?m=A2KS3YJG62DJUP...
+	#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.`;
+
+	await wait(ms('5s'));
+	let typeHere = await fbPage.$$('aria/Create a public post…');
+
+	typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
+	if (!typeHere)
+		throw new Error('Could not find post typing space.');
+	await typeHere.type(msg);
+
+	await wait(ms('15s'));
+
+	let submitButton = await fbPage.waitForSelector('aria/Post');
+	await submitButton.click();
+
+	await wait(ms('15s'));
+
+	await noSalesPost(fbPage);
+
+	/*DELETE END HERE
+
+
+	/*let promo;
 	let i;
 
 	for (i = 0; i < promos.length; i++) {
@@ -117,7 +149,7 @@ module.exports.run = async function (browser, promos, loginInfo) {
 
 	await wait(ms('10s'));
 
-	await close(fbPage);
+	await close(fbPage);*/
 
 	return;
 };
