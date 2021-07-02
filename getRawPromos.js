@@ -13,9 +13,15 @@ module.exports.run = async function (browser, startPage, pagesAtTime) {
 		let innerText = await azPage.evaluate(() => {
 			/* eslint-disable-next-line no-undef */
 			return JSON.parse(document.querySelector('body').innerText);
-		});
+		}).catch(() => {});
+
+		if (!innerText)
+			continue;
 
 		innerText = innerText.search_result.split('</div></div></div>');
+		if (innerText.length === 0)
+			continue;
+
 		for (let i = innerText.length - 1; i >= 0; i--) {
 			if (!START_DATE.test(innerText[i]))
 				innerText.splice(i, 1);
