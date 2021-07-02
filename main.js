@@ -17,7 +17,7 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 	if (!browser)
 		browser = await newBrowser();
 
-	let rawPromos;
+	/*let rawPromos;
 	let promos;
 
 	try {
@@ -34,15 +34,17 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 		await wait(ms('15s'));
 
 		return initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser);
-	}
+	}*/
 
-	await post(browser, promos, facebookLoginInfo);
+	//await post(browser, promos, facebookLoginInfo);
+	await post(browser, null, facebookLoginInfo);
 
-	await browser.close();
+
+	/*await browser.close();
 
 	browser = undefined;
 
-	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);
+	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);*/
 }
 
 async function start() {
