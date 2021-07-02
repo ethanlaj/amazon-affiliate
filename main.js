@@ -57,7 +57,7 @@ async function start() {
 
 		initialPage += 50;
 
-		await wait(ms('10m'));
+		await wait(ms('20m'));
 	}
 }
 
