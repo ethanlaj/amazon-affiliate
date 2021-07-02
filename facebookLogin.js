@@ -12,8 +12,9 @@ module.exports.run = async function (browser, loginInfo) {
 
 	//await doNotLoad(page);
 
-	await page.goto('https://www.facebook.com/groups/amazeballdeals');
 	try {
+		await page.goto('https://www.facebook.com/groups/amazeballdeals');
+
 		let email = await page.waitForSelector('aria/Email or Phone');
 		await email.type(loginInfo.email);
 
