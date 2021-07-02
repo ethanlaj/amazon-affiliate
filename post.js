@@ -106,6 +106,10 @@ module.exports.run = async function (browser, promos, loginInfo) {
 					await noSalesPost(fbPage);
 				}
 
+				let likeButtons = await fbPage.$$('aria/Like');
+				for (let likeButton of likeButtons)
+					await likeButton.click().catch(() => {});
+
 				await close(fbPage);
 
 				fbPage.removeAllListeners('error');
@@ -122,7 +126,7 @@ module.exports.run = async function (browser, promos, loginInfo) {
 
 	await wait(ms('10s'));
 
-	await close(fbPage);
+	//await close(fbPage);
 
 	return;
 };
