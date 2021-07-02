@@ -16,5 +16,7 @@ module.exports.run = async function (fbPage) {
 		}
 	}
 
+	await after[0].click();
+
 	return;
 };
