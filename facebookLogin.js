@@ -1,5 +1,5 @@
 let ms = require('ms');
-const doNotLoad = require('./doNotLoad').run;
+//const doNotLoad = require('./doNotLoad').run;
 
 module.exports.run = async function (browser, loginInfo) {
 	const page = await browser.newPage();
@@ -10,7 +10,7 @@ module.exports.run = async function (browser, loginInfo) {
 		height: 900,
 	});
 
-	await doNotLoad(page);
+	//await doNotLoad(page);
 
 	await page.goto('https://www.facebook.com/groups/amazeballdeals');
 	try {

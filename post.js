@@ -1,7 +1,8 @@
 const facebookLogin = require('./facebookLogin').run,
 	wait = require('./wait').run,
 	checkTimes = require('./checkTimes').run,
-	checkFlagged = require('./checkFlagged').run;
+	checkFlagged = require('./checkFlagged').run,
+	noSalesPost = require('./noSalesPost').run;
 
 let ms = require('ms');
 
@@ -99,6 +100,10 @@ module.exports.run = async function (browser, promos, loginInfo) {
 					promo.tries--;
 
 					await wait(ms('20m'));
+				} else {
+					await wait(ms('7s'));
+
+					await noSalesPost(fbPage);
 				}
 
 				await close(fbPage);
