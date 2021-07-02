@@ -5,7 +5,7 @@ module.exports.run = async function (fbPage) {
 	let after = await fbPage.$$('[aria-label="Actions for this post"]');
 	await after[0].click();
 
-	await wait(ms('2s'));
+	await wait(ms('15s'));
 
 	let elements = await fbPage.$$('*');
 
