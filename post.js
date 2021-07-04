@@ -74,7 +74,7 @@ module.exports.run = async function (browser, promos, loginInfo) {
 				let startMsg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
 						`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 						`Use code: ${promo.promoCode}\n` +
-						`Link: ${promo.productLinks[0]}` +
+						`Link: ${promo.productLinks[0]}`;
 
 				await wait(ms('35s'));
 				let typeHere = await fbPage.$$('aria/Create a public post…');
