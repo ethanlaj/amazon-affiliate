@@ -22,7 +22,7 @@ const MESSAGES = [
 	'I can save so much money with this deal!',
 ];
 
-let endMessage = '#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
+let endMsg = '\n\n#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
 
 async function close (page) {
 	page.closed = true;
@@ -71,11 +71,10 @@ module.exports.run = async function (browser, promos, loginInfo) {
 				}
 				let innerMessage = MESSAGES[Math.floor(Math.random() * EMOJIS.length)];
 
-				let msg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
+				let startMsg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
 						`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 						`Use code: ${promo.promoCode}\n` +
-						`Link: ${promo.productLinks[0]}\n\n` +
-						endMessage;
+						`Link: ${promo.productLinks[0]}` +
 
 				await wait(ms('35s'));
 				let typeHere = await fbPage.$$('aria/Create a public post…');
@@ -83,9 +82,13 @@ module.exports.run = async function (browser, promos, loginInfo) {
 				typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
 				if (!typeHere)
 					throw new Error('Could not find post typing space.');
-				await typeHere.type(msg);
+				await typeHere.type(startMsg);
 
-				await wait(ms('45s'));
+				await wait(ms('43s'));
+
+				await typeHere.type(endMsg);
+
+				await wait(ms('2s'));
 
 				let submitButton = await fbPage.waitForSelector('aria/Post');
 				await submitButton.click();
