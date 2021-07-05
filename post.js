@@ -22,7 +22,7 @@ const MESSAGES = [
 	'I can save so much money with this deal!',
 ];
 
-let endMsg = '\n\n#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
+let endMsg = '#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
 
 async function close (page) {
 	page.closed = true;
@@ -71,10 +71,11 @@ module.exports.run = async function (browser, promos, loginInfo) {
 				}
 				let innerMessage = MESSAGES[Math.floor(Math.random() * EMOJIS.length)];
 
-				let startMsg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
+				let msg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
 						`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 						`Use code: ${promo.promoCode}\n` +
-						`Link: ${promo.productLinks[0]}`;
+						`Link: ${promo.productLinks[0]}\n\n` +
+						endMsg;
 
 				await wait(ms('35s'));
 				let typeHere = await fbPage.$$('aria/Create a public post…');
@@ -82,13 +83,28 @@ module.exports.run = async function (browser, promos, loginInfo) {
 				typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
 				if (!typeHere)
 					throw new Error('Could not find post typing space.');
-				await typeHere.type(startMsg);
+				await typeHere.type(msg);
 
-				await wait(ms('43s'));
+				let embedded = false;
+				let tries = 0;
+				let linkedTwice = false;
+				while (!embedded) {
+					if (tries === 10) {
+						if (linkedTwice)
+							throw new Error('Could not create link embed.');
 
-				await typeHere.type(endMsg);
+						await typeHere.type('\n\n\n\n' + promo.productLinks[0]);
+						tries = 0;
+						linkedTwice = true;
+					}
+					tries++;
 
-				await wait(ms('2s'));
+					await wait(ms('5s'));
+
+					let links = await fbPage.$$eval('a', (as) => as.map((a) => a.href));
+
+					embedded = links.find((l) => l.includes(promo.productLinks[0].split('?')[0].split('dp/')[1]));
+				}
 
 				let submitButton = await fbPage.waitForSelector('aria/Post');
 				await submitButton.click();
