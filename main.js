@@ -1,4 +1,4 @@
-const newBrowser = require('./newBrowser').run,
+let newBrowser = require('./newBrowser').run,
 	getRawPromos = require('./getRawPromos').run,
 	createPromos = require('./createPromos').run,
 	post = require('./post').run,

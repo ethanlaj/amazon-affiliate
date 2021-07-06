@@ -1,5 +1,5 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
-const doNotLoad = require('./doNotLoad').run;
+let doNotLoad = require('./doNotLoad').run;
 
 async function close (page) {
 	page.closed = true;

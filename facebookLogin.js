@@ -1,8 +1,8 @@
 let ms = require('ms');
-//const doNotLoad = require('./doNotLoad').run;
+//let doNotLoad = require('./doNotLoad').run;
 
 module.exports.run = async function (browser, loginInfo) {
-	const page = await browser.newPage();
+	let page = await browser.newPage();
 	page.setDefaultTimeout(ms('1m'));
 
 	await page.setViewport({

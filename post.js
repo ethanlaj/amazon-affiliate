@@ -1,4 +1,4 @@
-const facebookLogin = require('./facebookLogin').run,
+let facebookLogin = require('./facebookLogin').run,
 	wait = require('./wait').run,
 	checkTimes = require('./checkTimes').run,
 	checkFlagged = require('./checkFlagged').run,
