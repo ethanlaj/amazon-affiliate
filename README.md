@@ -1,1 +1,1 @@
-Bot
+Amazon affiliate deal posting bot

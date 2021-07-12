@@ -3,7 +3,8 @@ let newBrowser = require('./newBrowser').run,
 	createPromos = require('./createPromos').run,
 	post = require('./post').run,
 	wait = require('./wait').run,
-	passwords = require('./passwords').facebook;
+	passwords = require('./passwords').facebook,
+	promises = require('./promises');
 
 
 let ms = require('ms');
@@ -20,27 +21,39 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 	let rawPromos;
 	let promos;
 
-	try {
-		rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
+	let promoPromise = new Promise(async (resolve) => {
+		await Promise.all(promises.create);
 
-		promos = await createPromos(browser, rawPromos);
-	} catch (e) {
-		console.log(e);
-		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
+		console.log(promises.create);
 
-		await browser.close();
+		try {
+			rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
 
-		browser = undefined;
+			promos = await createPromos(browser, rawPromos);
 
-		await wait(ms('15s'));
+			resolve('Finished creating promos ' + facebookLoginInfo.id + ' - - - ' + promos.length);
+		} catch {
+			console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
 
-		return initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser);
-	}
+			await browser.close();
+
+			browser = undefined;
+
+			await wait(ms('15s'));
+
+			resolve('Error creating promos ' + facebookLoginInfo.id);
+
+			return initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser);
+		}
+	});
+
+	promises.create.push(promoPromise);
+
+	await promoPromise;
 
 	await post(browser, promos, facebookLoginInfo);
 
 	await browser.close();
-
 	browser = undefined;
 
 	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);
@@ -54,11 +67,11 @@ async function start() {
 
 		let maxPage = initialPage + 50;
 
-		initiate(login, initialPage, 10, maxPage, browser);
+		initiate(login, initialPage, 2, maxPage, browser);
 
 		initialPage += 50;
 
-		await wait(ms('25m'));
+		await wait(ms('3s'));
 	}
 }
 
