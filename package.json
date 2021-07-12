@@ -4,6 +4,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
+    "gstart": "git fetch && git pull && node main.js",
     "debug": "ndb npm run start",
     "test": "npm run lint && node tests/core/run.js",
     "lint": "eslint .",

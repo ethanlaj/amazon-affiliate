@@ -2,7 +2,8 @@ let facebookLogin = require('./facebookLogin').run,
 	wait = require('./wait').run,
 	checkTimes = require('./checkTimes').run,
 	checkFlagged = require('./checkFlagged').run,
-	noSalesPost = require('./noSalesPost').run;
+	noSalesPost = require('./noSalesPost').run,
+	promises = require('./promises');
 
 let ms = require('ms');
 
@@ -32,8 +33,6 @@ async function close (page) {
 function listen (page) {
 	page.on('error', async (err) => {
 		if (err.toString().startsWith('Error: Page crashed')) {
-			page.removeAllListeners('error');
-
 			console.log('Page crashed. Refreshing now...');
 
 			await close(page);
@@ -50,97 +49,111 @@ module.exports.run = async function (browser, promos, loginInfo) {
 	let i;
 
 	for (i = 0; i < promos.length; i++) {
-		try {
-			if (fbPage.closed)
-				fbPage = await facebookLogin(browser, loginInfo);
+		let postPromise = new Promise(async (resolve) => {
+			await Promise.all(promises.post);
 
-			listen(fbPage);
+			console.log(promises.post);
 
-			promo = promos[i];
+			try {
+				if (fbPage.closed)
+					fbPage = await facebookLogin(browser, loginInfo);
 
-			if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= 5) {
-				promo.tries++;
+				listen(fbPage);
 
-				let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
-				await createPostButton.click();
+				promo = promos[i];
 
-				let emoji1 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-				let emoji2 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-				while (emoji2 === emoji1) {
-					emoji2 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
-				}
-				let innerMessage = MESSAGES[Math.floor(Math.random() * EMOJIS.length)];
+				if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= 5) {
+					promo.tries++;
 
-				let msg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
+					let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
+					await createPostButton.click();
+
+					let emoji1 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+					let emoji2 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+					while (emoji2 === emoji1) {
+						emoji2 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+					}
+					let innerMessage = MESSAGES[Math.floor(Math.random() * EMOJIS.length)];
+
+					let msg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
 						`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 						`Use code: ${promo.promoCode}\n` +
 						`Link: ${promo.productLinks[0]}\n\n` +
 						endMsg;
 
-				await wait(ms('35s'));
-				let typeHere = await fbPage.$$('aria/Create a public post…');
+					await wait(ms('35s'));
+					let typeHere = await fbPage.$$('aria/Create a public post…');
 
-				typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
-				if (!typeHere)
-					throw new Error('Could not find post typing space.');
-				await typeHere.type(msg);
+					typeHere = typeHere.find((e) => e._remoteObject.description.startsWith('div.notranslate'));
+					if (!typeHere)
+						throw new Error('Could not find post typing space.');
+					await typeHere.type(msg);
 
-				let embedded = false;
-				let tries = 0;
-				let linkedTwice = false;
-				while (!embedded) {
-					if (tries === 10) {
-						if (linkedTwice)
-							throw new Error('Could not create link embed.');
+					let embedded = false;
+					let tries = 0;
+					let linkedTwice = false;
+					while (!embedded) {
+						if (tries === 10) {
+							if (linkedTwice)
+								throw new Error('Could not create link embed.');
 
-						await typeHere.type('\n\n\n\n' + promo.productLinks[0]);
-						tries = 0;
-						linkedTwice = true;
+							await typeHere.type('\n\n\n\n' + promo.productLinks[0]);
+							tries = 0;
+							linkedTwice = true;
+						}
+						tries++;
+
+						await wait(ms('5s'));
+
+						let links = await fbPage.$$eval('a', (as) => as.map((a) => a.href));
+
+						embedded = links.find((l) => l.includes(promo.productLinks[0].split('?')[0].split('dp/')[1]));
 					}
-					tries++;
 
-					await wait(ms('5s'));
+					let submitButton = await fbPage.waitForSelector('aria/Post');
+					//await submitButton.click();
 
-					let links = await fbPage.$$eval('a', (as) => as.map((a) => a.href));
+					promo.posted = true;
 
-					embedded = links.find((l) => l.includes(promo.productLinks[0].split('?')[0].split('dp/')[1]));
+					await wait(ms('8s'));
+					let flagged = await checkFlagged(browser, fbPage);
+					if (flagged) {
+						i--;
+
+						promo.tries--;
+
+						await wait(ms('20m'));
+					} else {
+						await wait(ms('40s'));
+
+						await noSalesPost(fbPage);
+					}
+
+					let likeButtons = await fbPage.$$('aria/Like');
+					for (let likeButton of likeButtons)
+						await likeButton.click().catch(() => {});
+
+					await close(fbPage);
+
+					await wait(ms('15s'));
+
+					resolve('Successfully posted ' + loginInfo.id);
 				}
-
-				let submitButton = await fbPage.waitForSelector('aria/Post');
-				await submitButton.click();
-
-				promo.posted = true;
-
-				await wait(ms('8s'));
-				let flagged = await checkFlagged(browser, fbPage);
-				if (flagged) {
+			} catch {
+				if (!promo.posted)
 					i--;
-
-					promo.tries--;
-
-					await wait(ms('20m'));
-				} else {
-					await wait(ms('40s'));
-
-					await noSalesPost(fbPage);
-				}
-
-				let likeButtons = await fbPage.$$('aria/Like');
-				for (let likeButton of likeButtons)
-					await likeButton.click().catch(() => {});
 
 				await close(fbPage);
 
-				fbPage.removeAllListeners('error');
-
 				await wait(ms('15s'));
-			}
-		} catch {
-			if (!promo.posted)
-				i--;
 
-			await close(fbPage);
-		}
+				resolve('Failed to post' + loginInfo.id);
+			}
+		});
+
+		promises.post.push(postPromise);
+
+		await postPromise;
 	}
 
 	await wait(ms('10s'));
