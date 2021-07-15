@@ -1,4 +1,4 @@
-module.exports.run = function (ms) {
+export let run = function (ms) {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve('Finished wait');

@@ -1,7 +1,7 @@
-let wait = require('./wait').run;
-let ms = require('ms');
+import { run as wait } from './wait.js';
+import ms from 'ms';
 
-module.exports.run = async function (fbPage) {
+export let run = async function (fbPage) {
 	let after = await fbPage.$$('[aria-label="Actions for this post"]');
 	await after[0].click();
 

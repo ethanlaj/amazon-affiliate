@@ -1,11 +1,10 @@
-let facebookLogin = require('./facebookLogin').run,
-	wait = require('./wait').run,
-	checkTimes = require('./checkTimes').run,
-	checkFlagged = require('./checkFlagged').run,
-	noSalesPost = require('./noSalesPost').run,
-	promises = require('./promises');
+import { run as wait } from './wait.js';
+import { run as facebookLogin } from './facebookLogin.js';
+import { run as checkTimes } from './checkTimes.js';
+import { run as checkFlagged } from './checkFlagged.js';
+import { run as noSalesPost } from './noSalesPost.js';
 
-let ms = require('ms');
+import ms from 'ms';
 
 const EMOJIS = ['😍', '🔥', '💕', '🥰', '😮', '‼️', '🙈', '😎', '😳', '🤑'];
 
@@ -44,7 +43,7 @@ function listen (page) {
 	});
 }
 
-module.exports.run = async function (browser, promos, loginInfo) {
+export let run = async function (browser, promos, loginInfo) {
 	let fbPage = await facebookLogin(browser, loginInfo);
 
 	let promo;

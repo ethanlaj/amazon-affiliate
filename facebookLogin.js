@@ -1,7 +1,7 @@
-let ms = require('ms');
-//let doNotLoad = require('./doNotLoad').run;
+import ms from 'ms';
+//import { run as doNotLoad } from './doNotLoad.js';
 
-module.exports.run = async function (browser, loginInfo) {
+export let run = async function (browser, loginInfo) {
 	let page = await browser.newPage();
 	page.setDefaultTimeout(ms('1m'));
 

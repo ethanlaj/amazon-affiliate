@@ -1,8 +1,9 @@
-let ms = require('ms');
-let doNotLoad = require('./doNotLoad').run;
-let passwords = require('./passwords').amazon;
+import ms from 'ms';
 
-module.exports.run = async function (browser) {
+import { run as doNotLoad } from './doNotLoad.js';
+import { amazon as passwords } from './passwords.js';
+
+export let run = async function (browser) {
 	let page = await browser.newPage();
 	page.setDefaultTimeout(ms('3m'));
 
