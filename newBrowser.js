@@ -1,6 +1,6 @@
-let puppeteer = require('puppeteer-core');
+import puppeteer from 'puppeteer-core';
 
-module.exports.run = async function () {
+export let run = async function () {
 	let options = {
 		headless: false,
 	};

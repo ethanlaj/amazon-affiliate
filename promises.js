@@ -1,4 +1,4 @@
-module.exports = {
-	create: [],
-	post: [],
-};
+let create = [];
+let post = [];
+
+export { create, post };

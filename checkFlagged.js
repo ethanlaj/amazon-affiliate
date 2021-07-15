@@ -1,12 +1,12 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
-let doNotLoad = require('./doNotLoad').run;
+import { run as doNotLoad } from './doNotLoad.js';
 
 async function close (page) {
 	page.closed = true;
 	return await page.close().catch(() => {});
 }
 
-module.exports.run = async function (browser, fbPage) {
+export let run = async function (browser, fbPage) {
 	let innerText = await fbPage.evaluate(() => {
 		/* eslint-disable-next-line no-undef */
 		return document.querySelector('body').innerText;

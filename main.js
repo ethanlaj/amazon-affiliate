@@ -1,12 +1,39 @@
-let newBrowser = require('./newBrowser').run,
-	getRawPromos = require('./getRawPromos').run,
-	createPromos = require('./createPromos').run,
-	post = require('./post').run,
-	wait = require('./wait').run,
-	passwords = require('./passwords').facebook;
+import { run as newBrowser } from './newBrowser.js';
+import { run as getRawPromos } from './getRawPromos.js';
+import { run as createPromos } from './createPromos.js';
+import { run as post } from './post.js';
+import { run as wait } from './wait.js';
+import { facebook as passwords } from './passwords.js';
 
+import ms from 'ms';
 
-let ms = require('ms');
+async function close (browser) {
+	browser.closed = true;
+	return await browser.close().catch(() => {});
+}
+
+import PQueue from 'p-queue';
+let promoQueue = new PQueue({ concurrency: 1 });
+
+async function getAndCreatePromos(browser, startPage, pagesAtTime) {
+	try {
+		if (browser.closed)
+			browser = await newBrowser();
+
+		let rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
+
+		return await createPromos(browser, rawPromos);
+	} catch (e) {
+		console.log(e);
+		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
+
+		close(browser);
+
+		await wait(ms('15s'));
+
+		return await getAndCreatePromos(browser, startPage, pagesAtTime);
+	}
+}
 
 async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser) {
 	if (startPage >= maxPage)
@@ -14,43 +41,23 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 
 	console.log(`Running initiate script: login=${facebookLoginInfo.id}, startPage=${startPage}, pagesAtTime=${pagesAtTime}, maxPage=${maxPage}`);
 
-	if (!browser)
-		browser = await newBrowser();
+	let promos = await promoQueue.add(() => getAndCreatePromos(browser, startPage, pagesAtTime ));
 
-	let rawPromos;
-	let promos;
+	console.log(browser.closed);
+	console.log(promos.length);
 
-	try {
-		rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
+	/*await post(browser, promos, facebookLoginInfo);
 
-		promos = await createPromos(browser, rawPromos);
-	} catch (e) {
-		console.log(e);
-		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
+	await close(browser);
 
-		await browser.close();
-
-		browser = undefined;
-
-		await wait(ms('15s'));
-
-		return initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser);
-	}
-
-	await post(browser, promos, facebookLoginInfo);
-
-	await browser.close();
-
-	browser = undefined;
-
-	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);
+	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);*/
 }
 
 async function start() {
 	let initialPage = 1;
 
 	for (let login of passwords) {
-		let browser;
+		let browser = await newBrowser();
 
 		let maxPage = initialPage + 50;
 
@@ -58,7 +65,7 @@ async function start() {
 
 		initialPage += 50;
 
-		await wait(ms('25m'));
+		await wait(ms('2s'));
 	}
 }
 
