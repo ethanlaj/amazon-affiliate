@@ -3,7 +3,9 @@ import { run as getRawPromos } from './getRawPromos.js';
 import { run as createPromos } from './createPromos.js';
 import { run as post } from './post.js';
 import { run as wait } from './wait.js';
-import { facebook as passwords } from './passwords.js';
+import { settings } from './settings.js';
+
+console.log(settings);
 
 import ms from 'ms';
 
@@ -41,22 +43,19 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 
 	console.log(`Running initiate script: login=${facebookLoginInfo.id}, startPage=${startPage}, pagesAtTime=${pagesAtTime}, maxPage=${maxPage}`);
 
-	let promos = await promoQueue.add(() => getAndCreatePromos(browser, startPage, pagesAtTime ));
+	let promos = await promoQueue.add(() => getAndCreatePromos(browser, startPage, pagesAtTime));
 
-	console.log(browser.closed);
-	console.log(promos.length);
-
-	/*await post(browser, promos, facebookLoginInfo);
+	await post(browser, promos, facebookLoginInfo);
 
 	await close(browser);
 
-	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);*/
+	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);
 }
 
 async function start() {
 	let initialPage = 1;
 
-	for (let login of passwords) {
+	for (let login of settings.facebookLogins) {
 		let browser = await newBrowser();
 
 		let maxPage = initialPage + 50;

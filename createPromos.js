@@ -1,4 +1,5 @@
 import { run as doNotLoad } from './doNotLoad.js';
+import { settings } from './settings.js';
 import ms from 'ms';
 
 const START_DATE = /(?<=Start Date:\n<\/span> )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} at [0-9]{2}:[0-9]{2} [A-Za-z]{2} PDT/,
@@ -48,7 +49,7 @@ export let run = async function (browser, rawPromos) {
 
 		let formattedLinks = [];
 		for (let link of links)
-			formattedLinks.push(PRODUCT_LINK.exec(link)[0] + '&tag=amazeballdeal-20');
+			formattedLinks.push(PRODUCT_LINK.exec(link)[0] + `&tag=${settings.store}`);
 		promo.productLinks = formattedLinks;
 	}
 
