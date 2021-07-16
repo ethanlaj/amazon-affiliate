@@ -1,4 +1,5 @@
 import ms from 'ms';
+import { settings } from './settings.js';
 //import { run as doNotLoad } from './doNotLoad.js';
 
 export let run = async function (browser, loginInfo) {
@@ -13,7 +14,7 @@ export let run = async function (browser, loginInfo) {
 	//await doNotLoad(page);
 
 	try {
-		await page.goto('https://www.facebook.com/groups/amazeballdeals');
+		await page.goto(settings.linkToGroup);
 
 		let email = await page.waitForSelector('aria/Email or Phone');
 		await email.type(loginInfo.email);
