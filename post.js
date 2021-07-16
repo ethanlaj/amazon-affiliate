@@ -10,6 +10,8 @@ import ms from 'ms';
 import PQueue from 'p-queue';
 let postQueue = new PQueue({ concurrency: 1 });
 
+setInterval(() => console.log(postQueue._queue), 5000);
+
 const EMOJIS = ['😍', '🔥', '💕', '🥰', '😮', '‼️', '🙈', '😎', '😳', '🤑'];
 
 const MESSAGES = [
@@ -101,7 +103,7 @@ async function postToFB (browser, fbPage, loginInfo, promo) {
 			}
 
 			let submitButton = await fbPage.waitForSelector('aria/Post');
-			//await submitButton.click();
+			await submitButton.click();
 
 			promo.posted = true;
 
