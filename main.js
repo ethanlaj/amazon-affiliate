@@ -5,8 +5,6 @@ import { run as post } from './post.js';
 import { run as wait } from './wait.js';
 import { settings } from './settings.js';
 
-console.log(settings);
-
 import ms from 'ms';
 
 async function close (browser) {
