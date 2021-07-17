@@ -47,7 +47,7 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 
 	await close(browser);
 
-	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);
+	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage, browser);
 }
 
 async function start() {
