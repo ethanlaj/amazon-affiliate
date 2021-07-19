@@ -28,9 +28,12 @@ const MESSAGES = [
 
 let endMsg = '#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
 
-async function close (page) {
-	page.closed = true;
-	return await page.close().catch(() => {});
+async function reopen(page, loginInfo) {
+	let browser = page.browser();
+
+	await page.close().catch(() => {});
+
+	return await facebookLogin(browser, loginInfo);
 }
 
 function listen (page) {
@@ -38,7 +41,8 @@ function listen (page) {
 		if (err.toString().startsWith('Error: Page crashed')) {
 			console.log('Page crashed. Refreshing now...');
 
-			await close(page);
+			// eslint-disable-next-line promise/no-promise-in-callback
+			await page.close().catch(() => {});
 
 			return;
 		}
@@ -47,9 +51,6 @@ function listen (page) {
 
 async function postToFB (browser, fbPage, loginInfo, promo) {
 	try {
-		if (fbPage.closed)
-			fbPage = await facebookLogin(browser, loginInfo);
-
 		listen(fbPage);
 
 		if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= settings.numberOfPostTries) {
@@ -110,7 +111,7 @@ async function postToFB (browser, fbPage, loginInfo, promo) {
 			if (flagged) {
 				promo.tries--;
 
-				throw new Error('Flagged');
+				return 'Flagged';
 			} else {
 				await wait(ms('40s'));
 
@@ -121,23 +122,25 @@ async function postToFB (browser, fbPage, loginInfo, promo) {
 			for (let likeButton of likeButtons)
 				await likeButton.click().catch(() => {});
 
-			await close(fbPage);
+			await wait(ms('15s'));
 
-			return await wait(ms('15s'));
+			fbPage = await reopen(fbPage, loginInfo);
+
+			return;
 		} else return;
 	} catch (e) {
-		await close(fbPage);
-
-		if (e.message === 'Flagged')
-			return e.message;
-		else if (promo.posted)
+		if (promo.posted)
 			return;
-		else
+		else {
+			fbPage = await reopen(fbPage, loginInfo);
+
 			return await postToFB(browser, fbPage, loginInfo, promo);
+		}
 	}
 }
 
 export let run = async function (browser, promos, loginInfo) {
+	console.log(browser);
 	let fbPage = await facebookLogin(browser, loginInfo);
 
 	for (let i = 0; i < promos.length; i++) {
@@ -151,7 +154,7 @@ export let run = async function (browser, promos, loginInfo) {
 
 	await wait(ms('10s'));
 
-	await close(fbPage);
+	await browser.close();
 
 	return;
 };

@@ -1,11 +1,6 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
 import { run as doNotLoad } from './doNotLoad.js';
 
-async function close (page) {
-	page.closed = true;
-	return await page.close().catch(() => {});
-}
-
 export let run = async function (browser, fbPage) {
 	let innerText = await fbPage.evaluate(() => {
 		/* eslint-disable-next-line no-undef */
@@ -21,7 +16,7 @@ export let run = async function (browser, fbPage) {
 			.then((r) => r.filter((l) => CONTACT_LINK.test(l) )).catch(() => {});
 		let link = links[0];
 
-		await close(fbPage);
+		await fbPage.close().catch(() => {});
 
 		let submitFeedback = await browser.newPage();
 		await doNotLoad(submitFeedback);
