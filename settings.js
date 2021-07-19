@@ -12,7 +12,7 @@ export let settings = {
 			'email': 'ethan@lajfam.com',
 			'pw': 'EthanheartsFB@2004'
 		},
-		{
+		/*{
 			'id': 2,
 			'email': 'ethanlaj.business@gmail.com',
 			'pw': 'EthanheartsFB@2004'
@@ -26,6 +26,6 @@ export let settings = {
 			'id': 4,
 			'email': 'amazeballdeals@gmail.com',
 			'pw': 'EthanheartsFB@2004'
-		}
+		}*/
 	]
 };
