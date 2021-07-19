@@ -7,9 +7,10 @@ import { settings } from './settings.js';
 
 import ms from 'ms';
 
-async function close (browser) {
-	browser.closed = true;
-	return await browser.close().catch(() => {});
+async function reopen(browser) {
+	await browser.close().catch(() => {});
+
+	return await newBrowser();
 }
 
 import PQueue from 'p-queue';
@@ -17,17 +18,18 @@ let promoQueue = new PQueue({ concurrency: 1 });
 
 async function getAndCreatePromos(browser, startPage, pagesAtTime) {
 	try {
-		if (browser.closed)
-			browser = await newBrowser();
-
 		let rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
 
-		return await createPromos(browser, rawPromos);
+		let finalPromos = await createPromos(browser, rawPromos);
+
+		await browser.close();
+
+		return finalPromos;
 	} catch (e) {
 		console.log(e);
 		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
 
-		close(browser);
+		browser = await reopen(browser);
 
 		await wait(ms('15s'));
 
@@ -43,9 +45,11 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, brow
 
 	let promos = await promoQueue.add(() => getAndCreatePromos(browser, startPage, pagesAtTime));
 
+	browser = await reopen(browser);
+
 	await post(browser, promos, facebookLoginInfo);
 
-	await close(browser);
+	browser = await reopen(browser);
 
 	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage, browser);
 }
