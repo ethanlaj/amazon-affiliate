@@ -26,7 +26,6 @@ async function getAndCreatePromos(browser, startPage, pagesAtTime) {
 
 		return finalPromos;
 	} catch (e) {
-		console.log(e);
 		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
 
 		browser = await reopen(browser);

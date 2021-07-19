@@ -140,7 +140,6 @@ async function postToFB (browser, fbPage, loginInfo, promo) {
 }
 
 export let run = async function (browser, promos, loginInfo) {
-	console.log(browser);
 	let fbPage = await facebookLogin(browser, loginInfo);
 
 	for (let i = 0; i < promos.length; i++) {
