@@ -28,32 +28,13 @@ const MESSAGES = [
 
 let endMsg = '#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
 
-async function reopen(page, loginInfo) {
-	let browser = page.browser();
+async function postToFB (browser, loginInfo, promo) {
+	let fbPage;
 
-	await page.close().catch(() => {});
-
-	return await facebookLogin(browser, loginInfo);
-}
-
-function listen (page) {
-	page.on('error', async (err) => {
-		if (err.toString().startsWith('Error: Page crashed')) {
-			console.log('Page crashed. Refreshing now...');
-
-			// eslint-disable-next-line promise/no-promise-in-callback
-			await page.close().catch(() => {});
-
-			return;
-		}
-	});
-}
-
-async function postToFB (browser, fbPage, loginInfo, promo) {
 	try {
-		listen(fbPage);
-
 		if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= settings.numberOfPostTries) {
+			fbPage = await facebookLogin(browser, loginInfo);
+
 			promo.tries++;
 
 			let createPostButton = await fbPage.waitForSelector('aria/Create a public post…');
@@ -124,26 +105,24 @@ async function postToFB (browser, fbPage, loginInfo, promo) {
 
 			await wait(ms('15s'));
 
-			fbPage = await reopen(fbPage, loginInfo);
+			await fbPage.close().catch(() => {});
 
 			return;
 		} else return;
 	} catch (e) {
+		await fbPage.close().catch(() => {});
+
 		if (promo.posted)
 			return;
 		else {
-			fbPage = await reopen(fbPage, loginInfo);
-
-			return await postToFB(browser, fbPage, loginInfo, promo);
+			return await postToFB(browser, loginInfo, promo);
 		}
 	}
 }
 
 export let run = async function (browser, promos, loginInfo) {
-	let fbPage = await facebookLogin(browser, loginInfo);
-
 	for (let i = 0; i < promos.length; i++) {
-		let post = await postQueue.add(() => postToFB(browser, fbPage, loginInfo, promos[i]));
+		let post = await postQueue.add(() => postToFB(browser, loginInfo, promos[i]));
 
 		if (post === 'Flagged') {
 			await wait(ms('20m'));
