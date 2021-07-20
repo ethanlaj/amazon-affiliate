@@ -7,17 +7,15 @@ import { settings } from './settings.js';
 
 import ms from 'ms';
 
-async function reopen(browser) {
-	await browser.close().catch(() => {});
-
-	return await newBrowser();
-}
-
 import PQueue from 'p-queue';
 let promoQueue = new PQueue({ concurrency: 1 });
 
-async function getAndCreatePromos(browser, startPage, pagesAtTime) {
+async function getAndCreatePromos(startPage, pagesAtTime) {
+	let browser;
+
 	try {
+		browser = await newBrowser();
+
 		let rawPromos = await getRawPromos(browser, startPage, pagesAtTime);
 
 		let finalPromos = await createPromos(browser, rawPromos);
@@ -28,40 +26,36 @@ async function getAndCreatePromos(browser, startPage, pagesAtTime) {
 	} catch (e) {
 		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
 
-		browser = await reopen(browser);
+		await browser.close().catch(() => {});
 
 		await wait(ms('15s'));
 
-		return await getAndCreatePromos(browser, startPage, pagesAtTime);
+		return await getAndCreatePromos(startPage, pagesAtTime);
 	}
 }
 
-async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage, browser) {
+async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage) {
 	if (startPage >= maxPage)
 		startPage = maxPage - 50;
 
 	console.log(`Running initiate script: login=${facebookLoginInfo.id}, startPage=${startPage}, pagesAtTime=${pagesAtTime}, maxPage=${maxPage}`);
 
-	let promos = await promoQueue.add(() => getAndCreatePromos(browser, startPage, pagesAtTime));
+	let promos = await promoQueue.add(() => getAndCreatePromos(startPage, pagesAtTime));
 
-	browser = await reopen(browser);
+	let browser = await newBrowser();
 
 	await post(browser, promos, facebookLoginInfo);
 
-	browser = await reopen(browser);
-
-	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage, browser);
+	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);
 }
 
 async function start() {
 	let initialPage = 1;
 
 	for (let login of settings.facebookLogins) {
-		let browser = await newBrowser();
-
 		let maxPage = initialPage + 50;
 
-		initiate(login, initialPage, 10, maxPage, browser);
+		initiate(login, initialPage, 10, maxPage);
 
 		initialPage += 50;
 

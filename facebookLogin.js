@@ -2,6 +2,19 @@ import ms from 'ms';
 import { settings } from './settings.js';
 //import { run as doNotLoad } from './doNotLoad.js';
 
+function listen (page) {
+	page.on('error', async (err) => {
+		if (err.toString().startsWith('Error: Page crashed')) {
+			console.log('Page crashed. Refreshing now...');
+
+			// eslint-disable-next-line promise/no-promise-in-callback
+			await page.close().catch(() => {});
+
+			return;
+		}
+	});
+}
+
 export let run = async function (browser, loginInfo) {
 	let page = await browser.newPage();
 	page.setDefaultTimeout(ms('1m'));
@@ -10,6 +23,8 @@ export let run = async function (browser, loginInfo) {
 		width: 1500,
 		height: 900,
 	});
+
+	listen(page);
 
 	//await doNotLoad(page);
 
