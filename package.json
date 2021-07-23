@@ -1,9 +1,11 @@
 {
   "name": "amazon-affiliates",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "start": "node main.js",
+    "gstart": "git fetch && git pull && node main.js",
     "debug": "ndb npm run start",
     "test": "npm run lint && node tests/core/run.js",
     "lint": "eslint .",
@@ -12,8 +14,8 @@
   "license": "ISC",
   "author": "Ethan Lajeunesse",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.10",
     "ms": "^2.1.3",
+    "p-queue": "^7.1.0",
     "puppeteer": "^10.0.0",
     "puppeteer-core": "^10.0.0"
   },

@@ -1,6 +1,6 @@
-let ms = require('ms');
+import ms from 'ms';
 
-module.exports.run = function (promo) {
+export let run = function (promo) {
 	if (promo.startTimestamp && promo.endTimestamp &&
         Date.now() >= promo.startTimestamp &&
         promo.endTimestamp - Date.now() > ms('2h'))

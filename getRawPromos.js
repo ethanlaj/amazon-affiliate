@@ -1,8 +1,8 @@
-let amazonLogin = require('./amazonLogin').run;
+import { run as amazonLogin } from './amazonLogin.js';
 
 const START_DATE = /(?<=Start Date:\n<\/span> )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} at [0-9]{2}:[0-9]{2} [A-Za-z]{2} PDT/;
 
-module.exports.run = async function (browser, startPage, pagesAtTime) {
+export let run = async function (browser, startPage, pagesAtTime) {
 	let azPage = await amazonLogin(browser);
 
 	let rawPromos = [];
