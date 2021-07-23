@@ -1,7 +1,21 @@
-let ms = require('ms');
-//let doNotLoad = require('./doNotLoad').run;
+import ms from 'ms';
+import { settings } from './settings.js';
+//import { run as doNotLoad } from './doNotLoad.js';
 
-module.exports.run = async function (browser, loginInfo) {
+function listen (page) {
+	page.on('error', async (err) => {
+		if (err.toString().startsWith('Error: Page crashed')) {
+			console.log('Page crashed. Refreshing now...');
+
+			// eslint-disable-next-line promise/no-promise-in-callback
+			await page.close().catch(() => {});
+
+			return;
+		}
+	});
+}
+
+export let run = async function (browser, loginInfo) {
 	let page = await browser.newPage();
 	page.setDefaultTimeout(ms('1m'));
 
@@ -10,10 +24,12 @@ module.exports.run = async function (browser, loginInfo) {
 		height: 900,
 	});
 
+	listen(page);
+
 	//await doNotLoad(page);
 
 	try {
-		await page.goto('https://www.facebook.com/groups/amazeballdeals');
+		await page.goto(settings.linkToGroup);
 
 		let email = await page.waitForSelector('aria/Email or Phone');
 		await email.type(loginInfo.email);
