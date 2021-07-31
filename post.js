@@ -104,10 +104,10 @@ async function postToFB (browser, loginInfo, promo) {
 			for (let likeButton of likeButtons)
 				await likeButton.click().catch(() => {});*/
 
-			/*let comment = await fbPage.waitForSelector('aria/Write a comment');
-			await comment.click();
-			await fbPage.keyboard.type(promo.promoCode);
-			await fbPage.keyboard.press('ENTER');*/
+			let comment = await fbPage.waitForSelector('aria/Write a comment');
+			await comment.type(promo.promoCode);
+			await comment.focus();
+			await fbPage.keyboard.press('Enter');
 
 			let secondsToWait = Math.floor(Math.random() * (100 - 35 + 1) + 35);
 			await wait(ms(`${secondsToWait}s`));
@@ -117,6 +117,7 @@ async function postToFB (browser, loginInfo, promo) {
 			return;
 		} else return;
 	} catch (e) {
+		console.log(e);
 		await fbPage.close().catch(() => {});
 
 		if (promo.posted)
