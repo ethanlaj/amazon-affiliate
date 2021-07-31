@@ -2,6 +2,9 @@ export let settings = {
 	'store': 'amazeballdeal-20',
 	'linkToGroup': 'https://www.facebook.com/groups/amazeballdeals',
 	'numberOfPostTries': 5,
+	'restrictTimes': true,
+	'postStartTime': '6:00',
+	'postEndTime': '24:00',
 	'amazonLogin': {
 		'email': 'ethan@lajfam.com',
 		'pw': 'Ethanhearts@mazon1994'
