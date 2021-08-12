@@ -3,7 +3,9 @@ import puppeteer from 'puppeteer-core';
 export let run = async function () {
 	let options = {
 		headless: false,
+		defaultViewport: null,
 	};
+
 	if (process.env.ENVIRONMENT === 'local')
 		options.executablePath = './node_modules/puppeteer/.local-chromium/mac-884014/chrome-mac/Chromium.app/Contents/MacOS/Chromium';
 	if (process.env.ENVIRONMENT === 'pi') {

@@ -19,11 +19,6 @@ export let run = async function (browser, loginInfo) {
 	let page = await browser.newPage();
 	page.setDefaultTimeout(ms('1m'));
 
-	await page.setViewport({
-		width: 1500,
-		height: 900,
-	});
-
 	listen(page);
 
 	//await doNotLoad(page);

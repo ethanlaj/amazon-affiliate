@@ -4,6 +4,7 @@ import { run as checkTimes } from './checkTimes.js';
 import { run as checkFlagged } from './checkFlagged.js';
 import { run as noSalesPost } from './noSalesPost.js';
 import { settings } from './settings.js';
+import { active } from './restrictTimes.js';
 
 import ms from 'ms';
 
@@ -99,17 +100,24 @@ async function postToFB (browser, loginInfo, promo) {
 				await noSalesPost(fbPage);
 			}
 
-			let likeButtons = await fbPage.$$('aria/Like');
+			/*let likeButtons = await fbPage.$$('aria/Like');
 			for (let likeButton of likeButtons)
-				await likeButton.click().catch(() => {});
+				await likeButton.click().catch(() => {});*/
 
-			await wait(ms('15s'));
+			let comment = await fbPage.waitForSelector('aria/Write a comment');
+			await comment.type(promo.promoCode);
+			await comment.focus();
+			await fbPage.keyboard.press('Enter');
+
+			let secondsToWait = Math.floor(Math.random() * (100 - 35 + 1) + 35);
+			await wait(ms(`${secondsToWait}s`));
 
 			await fbPage.close().catch(() => {});
 
 			return;
 		} else return;
 	} catch (e) {
+		console.log(e);
 		await fbPage.close().catch(() => {});
 
 		if (promo.posted)
@@ -122,6 +130,9 @@ async function postToFB (browser, loginInfo, promo) {
 
 export let run = async function (browser, promos, loginInfo) {
 	for (let i = 0; i < promos.length; i++) {
+		if (!active)
+			break;
+
 		let post = await postQueue.add(() => postToFB(browser, loginInfo, promos[i]));
 
 		if (post === 'Flagged') {
