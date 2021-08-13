@@ -68,7 +68,7 @@ async function postToFB (browser, loginInfo, promo) {
 			while (!embedded) {
 				if (tries === 10) {
 					if (linkedTwice)
-						throw new Error('Could not create link embed.');
+						console.log('Link embed not found, going to post anyways.');
 
 					await typeHere.type('\n\n\n\n' + promo.productLinks[0]);
 					tries = 0;
@@ -79,6 +79,9 @@ async function postToFB (browser, loginInfo, promo) {
 				await wait(ms('5s'));
 
 				let links = await fbPage.$$eval('a', (as) => as.map((a) => a.href));
+
+				console.log(promo.productLinks[0].split('?')[0].split('dp/')[1]);
+				console.log(links);
 
 				embedded = links.find((l) => l.includes(promo.productLinks[0].split('?')[0].split('dp/')[1]));
 			}
