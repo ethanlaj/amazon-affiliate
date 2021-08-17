@@ -74,6 +74,8 @@ async function postToFB (browser, loginInfo, promo) {
 						console.log(links);
 						console.log('Link embed not found, going to assume embed is showing anyways.');
 						console.log('---------------------------------------------------\n\n\n');
+
+						embedded = true;
 					}
 
 					await typeHere.type('\n\n\n\n' + promo.productLinks[0]);
