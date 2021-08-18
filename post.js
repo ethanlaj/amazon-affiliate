@@ -31,9 +31,10 @@ let endMsg = '#ad - Codes and discounts are valid at the time of posting and can
 
 async function postToFB (browser, loginInfo, promo) {
 	let fbPage;
+	let postStatus = checkTimes(promo);
 
 	try {
-		if (promo.productLinks[0] && checkTimes(promo) && promo.tries <= settings.numberOfPostTries) {
+		if (promo.productLinks[0] && postStatus > 0 && promo.tries <= settings.numberOfPostTries) {
 			fbPage = await facebookLogin(browser, loginInfo);
 
 			promo.tries++;
@@ -51,7 +52,7 @@ async function postToFB (browser, loginInfo, promo) {
 			let msg = `${emoji1} ${promo.percent}% off!! ${emoji1}\n` +
 					`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 					`Use code: ${promo.promoCode}\n` +
-					`Link: ${promo.productLinks[0]}\n\n` +
+					`${postStatus === 2 ? '🔗' : 'Link'}: ${promo.productLinks[0]}\n\n` +
 					endMsg;
 
 			await wait(ms('35s'));

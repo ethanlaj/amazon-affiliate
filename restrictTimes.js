@@ -20,9 +20,12 @@ export let run = function () {
 	return startDate < currentDate && endDate > currentDate;
 };
 
-setInterval(() => {
+function check() {
 	if (settings.restrictTimes)
 		active = run();
 	else
 		active = true;
-}, 10000);
+}
+
+check();
+setInterval(check, 10000);
