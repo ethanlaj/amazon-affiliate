@@ -77,6 +77,7 @@ async function postToFB (browser, loginInfo, promo) {
 						console.log('---------------------------------------------------\n\n\n');
 
 						embedded = true;
+                                                break;
 					}
 
 					await typeHere.type('\n\n\n\n' + promo.productLinks[0]);
