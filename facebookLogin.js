@@ -26,17 +26,17 @@ export let run = async function (browser, loginInfo) {
 	try {
 		await page.goto(settings.linkToGroup);
 
-		let email = await page.waitForSelector('aria/Email or Phone');
+		let email = await page.waitForSelector('[type="email"]');
 		await email.type(loginInfo.email);
 
-		let password = await page.waitForSelector('aria/Password');
+		let password = await page.waitForSelector('[type="password"]');
 		await password.type(loginInfo.pw);
 
-		let loginButton = await page.waitForSelector('aria/Accessible login button');
+		//let loginButton = await page.waitForSelector('aria/Accessible login button');
 
 		await Promise.all([
 			page.waitForNavigation(),
-			loginButton.click(),
+			page.keyboard.press('Enter'),
 		]);
 	} catch {() => {};}
 
