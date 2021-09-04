@@ -1,6 +1,5 @@
 import ms from 'ms';
 import { settings } from './settings.js';
-//import { run as doNotLoad } from './doNotLoad.js';
 
 function listen (page) {
 	page.on('error', async (err) => {
@@ -21,10 +20,10 @@ export let run = async function (browser, loginInfo) {
 
 	listen(page);
 
-	//await doNotLoad(page);
-
 	try {
-		await page.goto(settings.linkToGroup);
+		await page.goto(settings.linkToGroup, {
+			waitUntil: 'networkidle0',
+		});
 
 		await page.type('[type="email"]', loginInfo.email)
 			.catch(async () => await page.type('[id="email"]', loginInfo.email).catch(() => {}));
@@ -32,13 +31,17 @@ export let run = async function (browser, loginInfo) {
 		await page.type('[type="password"]', loginInfo.pw);
 
 		await Promise.all([
-			page.waitForNavigation(),
+			page.waitForNavigation({
+				waitUntil: 'networkidle0',
+			}),
 			page.keyboard.press('Enter'),
 		]);
 
 		await page.type('[type="password"]', loginInfo.pw).then(async () => {
 			await Promise.all([
-				page.waitForNavigation(),
+				page.waitForNavigation({
+					waitUntil: 'networkidle0',
+				}),
 				page.keyboard.press('Enter'),
 			]);
 		}).catch(() => {});

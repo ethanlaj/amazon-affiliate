@@ -21,7 +21,9 @@ export let run = async function (browser, fbPage) {
 		let submitFeedback = await browser.newPage();
 		await doNotLoad(submitFeedback);
 
-		await submitFeedback.goto(link);
+		await submitFeedback.goto(link, {
+			waitUntil: 'networkidle0',
+		});
 
 		try {
 			let explainError = await submitFeedback.$$('aria/Please explain why you think this was an error');
