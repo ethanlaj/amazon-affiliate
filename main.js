@@ -27,6 +27,8 @@ async function getAndCreatePromos(startPage, pagesAtTime) {
 	} catch (e) {
 		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
 
+		console.log(e);
+
 		await browser.close().catch(() => {});
 
 		await wait(ms('15s'));
