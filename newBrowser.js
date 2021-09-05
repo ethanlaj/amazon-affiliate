@@ -10,7 +10,7 @@ export let run = async function () {
 		options.executablePath = './node_modules/puppeteer/.local-chromium/mac-884014/chrome-mac/Chromium.app/Contents/MacOS/Chromium';
 	if (process.env.ENVIRONMENT === 'pi') {
 		options.args = ['--no-sandbox', '--disable-setuid-sandbox'];
-		options.executablePath = '/usr/bin/chromium-browser';
+		options.executablePath = '/usr/share/applications';
 	}
 
 	let browser = await puppeteer.launch(options);
