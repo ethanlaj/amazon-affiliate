@@ -25,6 +25,12 @@ const MESSAGES = [
 	'Love this deal!',
 	'This is one of my favorite deals!',
 	'I can save so much money with this deal!',
+	'Take a look at this deal!',
+	'This is a must have item!',
+	'Let me know if you snag this deal!',
+	'Let me know if you want to keep seeing these deals!',
+	'What a great deal!',
+	'Let me know if you order this!',
 ];
 
 let endMsg = '#ad - Codes and discounts are valid at the time of posting and can expire at ANY time.';
@@ -53,6 +59,7 @@ async function postToFB (browser, loginInfo, promo) {
 					`${emoji2} ${innerMessage} ${emoji2}\n\n` +
 					`Use code: ${promo.promoCode}\n` +
 					`${postStatus === 2 ? '🔗' : 'Link'}: ${promo.productLinks[0]}\n\n` +
+					`${postStatus === 2 ? '#awesome ' : ''}` +
 					endMsg;
 
 			await wait(ms('35s'));
