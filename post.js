@@ -3,6 +3,8 @@ import { run as facebookLogin } from './facebookLogin.js';
 import { run as checkTimes } from './checkTimes.js';
 import { run as checkFlagged } from './checkFlagged.js';
 import { run as noSalesPost } from './noSalesPost.js';
+import { run as share } from './share.js';
+
 import { settings } from './settings.js';
 import { active } from './restrictTimes.js';
 
@@ -117,10 +119,6 @@ async function postToFB (browser, loginInfo, promo) {
 				await noSalesPost(fbPage);
 			}
 
-			/*let likeButtons = await fbPage.$$('aria/Like');
-			for (let likeButton of likeButtons)
-				await likeButton.click().catch(() => {});*/
-
 			let comment = await fbPage.waitForSelector('aria/Write a comment');
 			await comment.type(promo.promoCode);
 			await comment.focus();
@@ -128,6 +126,11 @@ async function postToFB (browser, loginInfo, promo) {
 
 			let secondsToWait = Math.floor(Math.random() * (100 - 35 + 1) + 35);
 			await wait(ms(`${secondsToWait}s`));
+
+			if (postStatus === 2) {
+				await share(fbPage);
+				await wait(ms('10s'));
+			}
 
 			await fbPage.close().catch(() => {});
 
