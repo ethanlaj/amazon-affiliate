@@ -1,6 +1,6 @@
 import { run as amazonLogin } from './amazonLogin.js';
 
-const START_DATE = /(?<=Start Date:\n<\/span> )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} at [0-9]{2}:[0-9]{2} [A-Za-z]{2} PDT/;
+const START_DATE = /(?<=Start Date:\n\u003c\/span\u003e )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} at [0-9]{2}:[0-9]{2} [A-Za-z]{2} P[A-Z]{1}T/;
 
 export let run = async function (browser, startPage, pagesAtTime) {
 	let azPage = await amazonLogin(browser);
