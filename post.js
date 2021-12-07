@@ -4,7 +4,7 @@ import { run as checkTimes } from './checkTimes.js';
 import { run as checkFlagged } from './checkFlagged.js';
 import { run as noSalesPost } from './noSalesPost.js';
 import { run as share } from './share.js';
-
+import { ProgressBar } from './progressBar.js';
 import { settings } from './settings.js';
 import { active } from './restrictTimes.js';
 
@@ -156,6 +156,8 @@ export let run = async function (browser, promos, loginInfo) {
 		let post = await postQueue.add(() => postToFB(browser, loginInfo, promos[i]));
 
 		if (post === 'Flagged') {
+			console.log('Facebook flagged bot for spam. Trying again in 20 minutes.');
+			new ProgressBar().start();
 			await wait(ms('20m'));
 			i--;
 		}
