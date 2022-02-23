@@ -47,7 +47,7 @@ async function postToFB (browser, loginInfo, promo) {
 
 			promo.tries++;
 
-			let createPostButton = await fbPage.waitForSelector('aria/Write something…');
+			let createPostButton = await fbPage.waitForSelector('aria/Write something...');
 			await createPostButton.click();
 
 			let emoji1 = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
