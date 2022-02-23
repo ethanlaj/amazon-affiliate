@@ -116,7 +116,7 @@ async function postToFB (browser, loginInfo, promo) {
 			} else {
 				await wait(ms('40s'));
 
-				await noSalesPost(fbPage);
+				//await noSalesPost(fbPage);
 			}
 
 			let comment = await fbPage.waitForSelector('aria/Write a comment');
