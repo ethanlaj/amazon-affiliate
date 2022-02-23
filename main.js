@@ -61,7 +61,7 @@ async function start() {
 	for (let login of settings.facebookLogins) {
 		let maxPage = initialPage + 50;
 
-		initiate(login, initialPage, 1, maxPage);
+		initiate(login, initialPage, 10, maxPage);
 
 		initialPage += 50;
 
