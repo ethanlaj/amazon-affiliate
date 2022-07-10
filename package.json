@@ -7,9 +7,7 @@
         "start": "node main.js",
         "gstart": "git fetch && git pull && npm install && node main.js",
         "debug": "ndb npm run start",
-        "test": "npm run lint && node tests/core/run.js",
-        "lint": "eslint .",
-        "fix": "eslint . --fix"
+        "test": "npm run lint && node tests/core/run.js"
     },
     "license": "ISC",
     "author": "Ethan Lajeunesse",
@@ -20,10 +18,6 @@
         "puppeteer-core": "^15.3.2"
     },
     "devDependencies": {
-        "babel-eslint": "^8.2.6",
-        "eslint": "^8.19.0",
-        "eslint-plugin-json": "^1.2.1",
-        "eslint-plugin-promise": "^3.8.0",
         "ndb": "^0.2.4"
     }
 }
