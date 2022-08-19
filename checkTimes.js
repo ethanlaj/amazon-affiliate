@@ -1,5 +1,5 @@
-import ms from 'ms';
-import { settings } from './settings.js';
+import ms from "ms";
+import { settings } from "./settings.js";
 
 // 0 = NO POST
 // 1 = FB POST

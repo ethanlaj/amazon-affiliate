@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-escape */
 
-import { run as doNotLoad } from './doNotLoad.js';
-import { settings } from './settings.js';
-import ms from 'ms';
+import { run as doNotLoad } from "./doNotLoad.js";
+import { settings } from "./settings.js";
+import ms from "ms";
 
 const START_DATE = /(?<=Start Date:\n\u003c\/span\u003e )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} at [0-9]{2}:[0-9]{2} [A-Za-z]{2} P[A-Z]{1}T/,
 	END_DATE = /(?<=End Date:\n\u003c\/span\u003e )[A-Za-z]{3,5} [0-9]{2}, [0-9]{4} at [0-9]{2}:[0-9]{2} [A-Za-z]{2} P[A-Z]{1}T/,
@@ -27,8 +27,8 @@ export let run = async function (browser, rawPromos) {
 			promos.push({
 				startDate: startDate[0],
 				endDate: endDate[0],
-				startTimestamp: Date.parse(startDate[0].replace('at', '')),
-				endTimestamp: Date.parse(endDate[0].replace('at', '')),
+				startTimestamp: Date.parse(startDate[0].replace("at", "")),
+				endTimestamp: Date.parse(endDate[0].replace("at", "")),
 				promoCode: promoCode[0],
 				promoLink: promoLink[0],
 				promoDesc: promoDesc[0],
@@ -39,13 +39,13 @@ export let run = async function (browser, rawPromos) {
 	}
 
 	let promoPage = await browser.newPage();
-	promoPage.setDefaultTimeout(ms('2m'));
+	promoPage.setDefaultTimeout(ms("2m"));
 
 	await doNotLoad(promoPage);
 
 	for (let promo of promos) {
 		await promoPage.goto(promo.promoLink);
-		let links = await promoPage.$$eval('a', (as) => as.map((a) => a.href))
+		let links = await promoPage.$$eval("a", (as) => as.map((a) => a.href))
 			.then((r) => r.filter((l) => PRODUCT_LINK.test(l) )).catch(() => {});
 
 		let formattedLinks = [];

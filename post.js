@@ -2,7 +2,7 @@ import { run as wait } from "./wait.js";
 import { run as facebookLogin } from "./facebookLogin.js";
 import { run as checkTimes } from "./checkTimes.js";
 import { run as checkFlagged } from "./checkFlagged.js";
-import { run as noSalesPost } from "./noSalesPost.js";
+//import { run as noSalesPost } from "./noSalesPost.js";
 import { run as share } from "./share.js";
 import { ProgressBar } from "./progressBar.js";
 import { settings } from "./settings.js";

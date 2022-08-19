@@ -1,7 +1,7 @@
 export let run = function (ms) {
 	return new Promise((resolve) => {
 		setTimeout(() => {
-			resolve('Finished wait');
+			resolve("Finished wait");
 		}, ms);
 	});
 };

@@ -1,14 +1,14 @@
-import { run as newBrowser } from './newBrowser.js';
-import { run as getRawPromos } from './getRawPromos.js';
-import { run as createPromos } from './createPromos.js';
-import { run as post } from './post.js';
-import { run as wait } from './wait.js';
-import { settings } from './settings.js';
-import { active } from './restrictTimes.js';
+import { run as newBrowser } from "./newBrowser.js";
+import { run as getRawPromos } from "./getRawPromos.js";
+import { run as createPromos } from "./createPromos.js";
+import { run as post } from "./post.js";
+import { run as wait } from "./wait.js";
+import { settings } from "./settings.js";
+import { active } from "./restrictTimes.js";
 
-import ms from 'ms';
+import ms from "ms";
 
-import PQueue from 'p-queue';
+import PQueue from "p-queue";
 let promoQueue = new PQueue({ concurrency: 1 });
 
 async function getAndCreatePromos(startPage, pagesAtTime) {
@@ -25,13 +25,13 @@ async function getAndCreatePromos(startPage, pagesAtTime) {
 
 		return finalPromos;
 	} catch (e) {
-		console.log('\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n');
+		console.log("\nSomething went wrong with creating promotions, retrying again in 15 seconds..\n\n");
 
 		console.log(e);
 
 		await browser.close().catch(() => {});
 
-		await wait(ms('15s'));
+		await wait(ms("15s"));
 
 		return await getAndCreatePromos(startPage, pagesAtTime);
 	}
@@ -44,7 +44,7 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage) {
 	console.log(`Running initiate script: login=${facebookLoginInfo.id}, startPage=${startPage}, pagesAtTime=${pagesAtTime}, maxPage=${maxPage}`);
 
 	while (!active)
-		await wait(ms('1m'));
+		await wait(ms("1m"));
 
 	let promos = await promoQueue.add(() => getAndCreatePromos(startPage, pagesAtTime));
 
@@ -65,7 +65,7 @@ async function start() {
 
 		initialPage += 50;
 
-		await wait(ms('2s'));
+		await wait(ms("2s"));
 	}
 }
 
