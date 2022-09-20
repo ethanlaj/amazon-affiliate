@@ -1,10 +1,10 @@
-import { run as newBrowser } from "./newBrowser.js";
-import { run as getRawPromos } from "./getRawPromos.js";
-import { run as createPromos } from "./createPromos.js";
-import { run as post } from "./post.js";
-import { run as wait } from "./wait.js";
+import { run as newBrowser } from "./utility/newBrowser.js";
+import { run as getRawPromos } from "./amazon/getRawPromos.js";
+import { run as createPromos } from "./amazon/createPromos.js";
+import { run as post } from "./facebook/post.js";
+import { run as wait } from "./utility/wait.js";
 import { settings } from "./settings.js";
-import { active } from "./restrictTimes.js";
+import { active } from "./utility/restrictTimes.js";
 
 import ms from "ms";
 
@@ -29,7 +29,7 @@ async function getAndCreatePromos(startPage, pagesAtTime) {
 
 		console.log(e);
 
-		await browser.close().catch(() => {});
+		await browser.close().catch(() => { });
 
 		await wait(ms("15s"));
 

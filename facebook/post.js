@@ -1,12 +1,12 @@
-import { run as wait } from "./wait.js";
+import { run as wait } from "../utility/wait.js";
 import { run as facebookLogin } from "./facebookLogin.js";
-import { run as checkTimes } from "./checkTimes.js";
+import { run as checkTimes } from "../utility/checkTimes.js";
 import { run as checkFlagged } from "./checkFlagged.js";
 //import { run as noSalesPost } from "./noSalesPost.js";
 import { run as share } from "./share.js";
-import { ProgressBar } from "./progressBar.js";
-import { settings } from "./settings.js";
-import { active } from "./restrictTimes.js";
+import { ProgressBar } from "../utility/progressBar.js";
+import { settings } from "../settings.js";
+import { active } from "../utility/restrictTimes.js";
 
 import ms from "ms";
 
@@ -108,13 +108,13 @@ async function postToFB(browser, loginInfo, promo) {
 				await wait(ms("10s"));
 			}
 
-			await fbPage.close().catch(() => {});
+			await fbPage.close().catch(() => { });
 
 			return;
 		} else return;
 	} catch (e) {
 		console.log(e);
-		await fbPage.close().catch(() => {});
+		await fbPage.close().catch(() => { });
 
 		if (promo.posted) return;
 		else {

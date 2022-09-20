@@ -13,7 +13,7 @@ export let run = async function (browser, startPage, pagesAtTime) {
 		let innerText = await azPage.evaluate(() => {
 			/* eslint-disable-next-line no-undef */
 			return JSON.parse(document.querySelector("body").innerText);
-		}).catch(() => {});
+		}).catch(() => { });
 
 		if (!innerText)
 			continue;

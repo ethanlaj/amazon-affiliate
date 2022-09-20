@@ -1,5 +1,5 @@
 const CONTACT_LINK = /https:\/\/www.facebook.com\/help\/contact\/[0-9]+\?additional_content=/;
-import { run as doNotLoad } from "./doNotLoad.js";
+import { run as doNotLoad } from "../utility/doNotLoad.js";
 
 export let run = async function (browser, fbPage) {
 	let innerText = await fbPage.evaluate(() => {
@@ -8,13 +8,13 @@ export let run = async function (browser, fbPage) {
 	});
 
 	let flagged = innerText.includes("We limit how often you can post, comment or do other things in a given amount of time in order to help protect the community from spam. You can try again later.") ||
-				innerText.includes("You're temporarily restricted from posting to groups");
+		innerText.includes("You're temporarily restricted from posting to groups");
 	if (flagged) {
 		let links = await fbPage.$$eval("a", (as) => as.map((a) => a.href))
-			.then((r) => r.filter((l) => CONTACT_LINK.test(l) )).catch(() => {});
+			.then((r) => r.filter((l) => CONTACT_LINK.test(l))).catch(() => { });
 		let link = links[0];
 
-		await fbPage.close().catch(() => {});
+		await fbPage.close().catch(() => { });
 
 		let submitFeedback = await browser.newPage();
 		await doNotLoad(submitFeedback);

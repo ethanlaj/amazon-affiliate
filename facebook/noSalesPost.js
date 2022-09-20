@@ -1,4 +1,4 @@
-import { run as wait } from "./wait.js";
+import { run as wait } from "../utility/wait.js";
 import ms from "ms";
 
 export let run = async function (fbPage) {
@@ -12,7 +12,7 @@ export let run = async function (fbPage) {
 	for (let element of elements) {
 		let innerText = await element.getProperty("innerText").then(async (p) => await p.jsonValue());
 		if (innerText === "Turn off sale format\nThis will remove features from this post") {
-			await element.click().catch(() => {});
+			await element.click().catch(() => { });
 		}
 	}
 

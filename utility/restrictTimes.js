@@ -1,4 +1,4 @@
-import { settings } from "./settings.js";
+import { settings } from "../settings.js";
 
 let startTime = settings.postStartTime;
 let endTime = settings.postEndTime;

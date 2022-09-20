@@ -6,8 +6,9 @@ export let run = async function () {
 		defaultViewport: null,
 	};
 
-	if (process.env.ENVIRONMENT === "local")
-		options.executablePath = "./node_modules/puppeteer/.local-chromium/mac-884014/chrome-mac/Chromium.app/Contents/MacOS/Chromium";
+	if (process.env.ENVIRONMENT === "local") {
+		options.executablePath = "/Users/ethan/Projects/amazon-affiliate/node_modules/puppeteer/.local-chromium/mac-1022525/chrome-mac/Chromium.app/Contents/MacOS/Chromium";
+	}
 	if (process.env.ENVIRONMENT === "pi") {
 		options.args = ["--no-sandbox", "--disable-setuid-sandbox"];
 		options.executablePath = "/usr/bin/chromium-browser";
