@@ -37,6 +37,26 @@ async function getAndCreatePromos(startPage, pagesAtTime) {
 	}
 }
 
+async function postToFB(promos, facebookLoginInfo) {
+	let browser;
+
+	try {
+		browser = await newBrowser();
+
+		await post(browser, promos, facebookLoginInfo);
+	} catch (e) {
+		console.log("\nSomething went wrong with posting promos, retrying again in 15 seconds..\n\n");
+
+		console.log(e);
+
+		await browser.close().catch(() => { });
+
+		await wait(ms("15s"));
+
+		return await postToFB(promos.filter(p => p.posted == false), facebookLoginInfo);
+	}
+}
+
 async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage) {
 	if (startPage >= maxPage)
 		startPage = maxPage - 50;
@@ -48,9 +68,7 @@ async function initiate(facebookLoginInfo, startPage, pagesAtTime, maxPage) {
 
 	let promos = await promoQueue.add(() => getAndCreatePromos(startPage, pagesAtTime));
 
-	let browser = await newBrowser();
-
-	await post(browser, promos, facebookLoginInfo);
+	await postToFB(promos, facebookLoginInfo);
 
 	initiate(facebookLoginInfo, startPage + pagesAtTime, pagesAtTime, maxPage);
 }

@@ -27,6 +27,9 @@ async function postToFB(browser, loginInfo, promo) {
 		if (promo.productLinks[0] && postStatus > 0 && promo.tries <= settings.numberOfPostTries) {
 			fbPage = await facebookLogin(browser, loginInfo);
 
+			if (!fbPage)
+				throw Error("No FB Page detected.");
+
 			promo.tries++;
 
 			let createPostButton = await fbPage.waitForSelector("aria/Write something...");
@@ -114,11 +117,13 @@ async function postToFB(browser, loginInfo, promo) {
 		} else return;
 	} catch (e) {
 		console.log(e);
-		await fbPage.close().catch(() => { });
 
-		if (promo.posted) return;
-		else {
-			return await postToFB(browser, loginInfo, promo);
+		if (promo.posted) {
+			if (fbPage && fbPage.close)
+				fbPage.close().catch(() => { });
+			return;
+		} else {
+			throw Error("Promo was not posted.");
 		}
 	}
 }
