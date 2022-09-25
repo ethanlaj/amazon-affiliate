@@ -10,13 +10,13 @@ export let settings = {
 	// Time before a deal expires that the bot will signal that the deal is TikTok ready
 	ttExpireTime: "7d",
 	amazonLogin: {
-		email: process.env.EMAIL,
+		email: process.env.AMAZON_EMAIL,
 		pw: process.env.AMAZON_PW,
 	},
 	facebookLogins: [
 		{
 			id: 1,
-			email: process.env.EMAIL,
+			email: process.env.FB_EMAIL,
 			pw: process.env.FB_PW,
 		},
 	],
