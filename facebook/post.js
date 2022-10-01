@@ -49,22 +49,24 @@ async function postToFB(browser, loginInfo, promo) {
 
 			typeHere = typeHere.find((e) => e._remoteObject.description.startsWith("div.notranslate"));
 			if (!typeHere) throw new Error("Could not find post typing space.");
+
+			let imgs = await fbPage.$$eval("img", (as) => as.map((a) => a.currentSrc));
+			imgs = imgs.filter(img => img.includes("external"));
+			let imgCount = imgs.length;
+
 			await typeHere.type(msg);
 
-			let embedded = false;
 			let tries = 0;
 			let linkedTwice = false;
-			let links;
-			while (!embedded) {
+			while (imgs.length <= imgCount) {
 				if (tries === 10) {
 					if (linkedTwice) {
 						console.log("\n\n\n---------------------------------------------------");
 						console.log(promo.productLinks[0].split("?")[0].split("dp/")[1]);
-						console.log(links);
-						console.log("Link embed not found, going to assume embed is showing anyways.");
+						console.log(imgs);
+						console.log("Picture embed not found, going to assume embed is showing anyways.");
 						console.log("---------------------------------------------------\n\n\n");
 
-						embedded = true;
 						break;
 					}
 
@@ -76,9 +78,8 @@ async function postToFB(browser, loginInfo, promo) {
 
 				await wait(ms("5s"));
 
-				links = await fbPage.$$eval("a", (as) => as.map((a) => a.href));
-
-				embedded = links.find((l) => l.includes(promo.productLinks[0].split("?")[0].split("dp/")[1]));
+				imgs = await fbPage.$$eval("img", (as) => as.map((a) => a.currentSrc));
+				imgs = imgs.filter(img => img.includes("external"));
 			}
 
 			let submitButton = await fbPage.waitForSelector("aria/Post");
