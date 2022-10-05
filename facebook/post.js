@@ -32,6 +32,8 @@ async function postToFB(browser, loginInfo, promo) {
 
 			promo.tries++;
 
+			await wait(ms("25s"));
+
 			let createPostButton = await fbPage.waitForSelector("aria/Write something...");
 			await createPostButton.click();
 
